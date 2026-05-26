@@ -1,0 +1,17 @@
+# مفاتيح سرية — لا ترفعها أبداً
+.env.js
+
+# نظام
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# محررات
+.idea/
+.vscode/
+*.code-workspace
+
+# وسائط مؤقتة
+*.tmp
+*.bak

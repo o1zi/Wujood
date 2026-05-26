@@ -1,0 +1,248 @@
+/* ============== وجود — Design System ============== */
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Reem+Kufi:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Surfaces */
+  --bg: #faf8f3;
+  --bg-alt: #f3efe6;
+  --surface: #ffffff;
+  --surface-2: #fbf9f4;
+
+  /* Brand */
+  --ink: #14201a;
+  --ink-soft: #2a3a32;
+  --muted: #6e7770;
+  --muted-soft: #9ba39e;
+
+  --primary: #0e3b2e;
+  --primary-hover: #154a3a;
+  --primary-soft: #e2ebe6;
+  --primary-ink: #0a2a20;
+
+  --accent: #b08a3e;
+  --accent-hover: #c69a47;
+  --accent-soft: #f1e7cf;
+
+  --danger: #b3392c;
+  --danger-soft: #f8e6e3;
+  --success: #2e7a52;
+  --warn: #b07a1e;
+  --warn-soft: #f7ebd0;
+
+  --border: #e5dfd2;
+  --border-soft: #efeadd;
+  --border-strong: #d6cdb8;
+
+  /* Type */
+  --font-sans: 'IBM Plex Sans Arabic', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'Reem Kufi', 'IBM Plex Sans Arabic', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Radii */
+  --r-xs: 4px;
+  --r-sm: 6px;
+  --r-md: 10px;
+  --r-lg: 14px;
+  --r-xl: 20px;
+  --r-pill: 999px;
+
+  /* Shadows */
+  --sh-xs: 0 1px 0 rgba(20, 32, 26, 0.04);
+  --sh-sm: 0 1px 2px rgba(20, 32, 26, 0.06), 0 1px 1px rgba(20, 32, 26, 0.04);
+  --sh-md: 0 4px 12px -2px rgba(20, 32, 26, 0.08), 0 2px 4px rgba(20, 32, 26, 0.05);
+  --sh-lg: 0 12px 32px -8px rgba(20, 32, 26, 0.16), 0 4px 12px rgba(20, 32, 26, 0.06);
+  --sh-xl: 0 24px 48px -12px rgba(20, 32, 26, 0.22);
+
+  /* Ring */
+  --ring: 0 0 0 3px rgba(14, 59, 46, 0.14);
+  --ring-accent: 0 0 0 3px rgba(176, 138, 62, 0.22);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+html {
+  font-family: var(--font-sans);
+  color: var(--ink);
+  background: var(--bg);
+  direction: rtl;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: 'kern', 'liga', 'calt';
+}
+
+body {
+  min-height: 100vh;
+  font-size: 15px;
+  line-height: 1.55;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; padding: 0; }
+input, textarea, select { font-family: inherit; color: inherit; }
+ul, ol { margin: 0; padding: 0; list-style: none; }
+
+::selection { background: var(--primary); color: #fff; }
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 8px; border: 2px solid var(--bg); }
+::-webkit-scrollbar-thumb:hover { background: var(--muted-soft); }
+
+/* ============== Reusable Atoms ============== */
+
+.wj-btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  height: 40px; padding: 0 18px;
+  border-radius: var(--r-md);
+  font-family: var(--font-sans);
+  font-size: 14px; font-weight: 500;
+  transition: all .15s ease;
+  white-space: nowrap;
+  border: 1px solid transparent;
+  user-select: none;
+}
+.wj-btn.sm { height: 32px; padding: 0 12px; font-size: 13px; }
+.wj-btn.lg { height: 48px; padding: 0 24px; font-size: 15px; }
+.wj-btn.icon { width: 36px; padding: 0; }
+
+.wj-btn-primary {
+  background: var(--primary); color: #fff;
+}
+.wj-btn-primary:hover { background: var(--primary-hover); }
+.wj-btn-primary:active { transform: translateY(1px); }
+
+.wj-btn-secondary {
+  background: var(--surface); color: var(--ink);
+  border-color: var(--border-strong);
+}
+.wj-btn-secondary:hover { background: var(--bg-alt); border-color: var(--muted-soft); }
+
+.wj-btn-ghost { color: var(--ink-soft); }
+.wj-btn-ghost:hover { background: var(--bg-alt); }
+
+.wj-btn-accent { background: var(--accent); color: #fff; }
+.wj-btn-accent:hover { background: var(--accent-hover); }
+
+.wj-btn-danger { background: var(--surface); color: var(--danger); border-color: var(--border-strong); }
+.wj-btn-danger:hover { background: var(--danger-soft); border-color: var(--danger); }
+
+.wj-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* Inputs */
+.wj-field { display: flex; flex-direction: column; gap: 6px; }
+.wj-label { font-size: 13px; font-weight: 500; color: var(--ink-soft); }
+.wj-hint { font-size: 12px; color: var(--muted); }
+
+.wj-input, .wj-textarea, .wj-select {
+  width: 100%;
+  background: var(--surface);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--ink);
+  transition: all .15s ease;
+}
+.wj-input:focus, .wj-textarea:focus, .wj-select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: var(--ring);
+}
+.wj-textarea { min-height: 96px; resize: vertical; line-height: 1.6; }
+
+.wj-input.sm { padding: 6px 10px; font-size: 13px; }
+
+/* Cards */
+.wj-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--sh-xs);
+}
+.wj-card-pad { padding: 22px; }
+
+/* Badges */
+.wj-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  height: 22px; padding: 0 9px;
+  border-radius: var(--r-pill);
+  font-size: 11.5px; font-weight: 500;
+  background: var(--bg-alt); color: var(--ink-soft);
+  border: 1px solid var(--border);
+}
+.wj-badge.green { background: var(--primary-soft); color: var(--primary); border-color: transparent; }
+.wj-badge.gold  { background: var(--accent-soft); color: #7a5d27; border-color: transparent; }
+.wj-badge.red   { background: var(--danger-soft); color: var(--danger); border-color: transparent; }
+.wj-badge.amber { background: var(--warn-soft); color: var(--warn); border-color: transparent; }
+.wj-badge.dot::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: currentColor;
+}
+
+/* Toggles */
+.wj-toggle {
+  position: relative;
+  width: 38px; height: 22px;
+  background: var(--border-strong);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: background .18s ease;
+  flex-shrink: 0;
+}
+.wj-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px; right: 2px;
+  width: 18px; height: 18px;
+  background: #fff;
+  border-radius: 50%;
+  transition: all .18s cubic-bezier(.4,0,.2,1);
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.wj-toggle.on { background: var(--primary); }
+.wj-toggle.on::after { right: calc(100% - 20px); }
+
+/* Divider */
+.wj-hr { height: 1px; background: var(--border); border: 0; margin: 0; }
+
+/* Logo */
+.wj-logo {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--ink);
+}
+.wj-logo-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent);
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+/* Mono digits */
+.mono { font-family: var(--font-mono); font-feature-settings: 'tnum'; }
+
+/* Anim */
+@keyframes wjFadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+.wj-anim-in { animation: wjFadeIn .25s ease both; }
+
+/* Focus ring for accessibility */
+:focus-visible { outline: 2px solid var(--primary); outline-offset: 2px; border-radius: 4px; }
+
+/* Skeleton placeholder image */
+.wj-placeholder {
+  background:
+    repeating-linear-gradient(45deg, rgba(176,138,62,.05) 0 8px, rgba(176,138,62,.10) 8px 16px),
+    var(--bg-alt);
+  border: 1px dashed var(--border-strong);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: .04em;
+}
