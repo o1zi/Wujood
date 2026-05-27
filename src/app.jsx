@@ -86,9 +86,11 @@ const App = () => {
   if (route === '/' || route === '') {
     view = <Landing go={go} />;
   } else if (route === '/login') {
-    if (user) { setTimeout(() => go(isAdminEffective ? '/admin' : '/dashboard'), 0); return null; }
+    if (user && (tenant || isAdminEffective)) { setTimeout(() => go(isAdminEffective ? '/admin' : '/dashboard'), 0); return null; }
+    if (user && !tenant) { sbSignOut().then(() => { setUser(null); setIsAdmin(false); setTenant(null); }); }
     view = <Auth go={go} />;
   } else if (route.startsWith('/dashboard')) {
+    if (!tenant) { setTimeout(() => go('/login'), 0); return null; }
     if (!user && !sessionStorage.getItem('wujood_admin')) { setTimeout(() => go('/login'), 0); return null; }
     if (isAdminEffective) { setTimeout(() => go('/admin'), 0); return null; }
     view = <Tenant go={go} tenant={tenant} setTenant={setTenant} user={user} />;

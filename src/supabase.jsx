@@ -32,7 +32,10 @@ const showToast = (msg, tone = 'ok') => {
 
 // ── Auth ──────────────────────────────────────────────────────
 const sbSignIn = (email, pw) => sb.auth.signInWithPassword({ email, password: pw });
-const sbSignOut = () => { sessionStorage.removeItem('wujood_admin'); return sb.auth.signOut(); };
+const sbSignOut = async () => {
+  sessionStorage.removeItem('wujood_admin');
+  try { await sb.auth.signOut(); } catch (e) {}
+};
 const sbGetSession = async () => { const { data: { session } } = await sb.auth.getSession(); return session; };
 const sbOnAuthChange = cb => sb.auth.onAuthStateChange(cb);
 const sbIsAdmin = async () => {

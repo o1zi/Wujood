@@ -53,7 +53,7 @@ const TenantShell = ({ children, page, setPage, go, tenant }) => {
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
           <SideNavItem icon="user" label={t.short_ar || 'المكتب'} onClick={() => {}} />
-          <SideNavItem icon="logout" label="تسجيل الخروج" onClick={() => sbSignOut().then(() => go('#/'))} />
+          <SideNavItem icon="logout" label="تسجيل الخروج" onClick={async () => { await sbSignOut(); go('/login'); }} />
         </div>
       </aside>
 
@@ -1385,7 +1385,7 @@ const Tenant = ({ go, tenant, setTenant, user }) => {
       )}
       <Btn kind="primary" icon="refresh" onClick={retry} disabled={retrying}>{retrying ? 'جاري المحاولة...' : 'إعادة المحاولة'}</Btn>
       <Btn kind="secondary" icon="whatsapp" onClick={() => window.open('https://wa.me/966500000000','_blank')}>تواصل عبر واتساب</Btn>
-      <Btn kind="ghost" onClick={() => sbSignOut().then(() => go('#/'))}>تسجيل خروج</Btn>
+      <Btn kind="ghost" onClick={async () => { await sbSignOut(); go('/login'); }}>تسجيل خروج</Btn>
     </div>
   );
 
