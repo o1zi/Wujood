@@ -137,13 +137,15 @@ const BODY_FONTS = ['IBM Plex Sans Arabic', 'Tajawal', 'Cairo', 'Almarai', 'Noto
 const HERO_STYLES = ['ملء الشاشة', 'مقسم نص-صورة', 'مقسم معكوس', 'مركزي', 'بسيط', 'سينمائي'];
 
 // Helpers
-const fmtSAR = (n) => n.toLocaleString('en-US');
+const fmtSAR = (n) => (n || 0).toLocaleString('en-US');
 const daysUntil = (dateStr) => {
   const d = new Date(dateStr); const now = new Date();
+  if (isNaN(d.getTime())) return 0;
   return Math.ceil((d - now) / (1000 * 60 * 60 * 24));
 };
 const fmtDate = (dateStr) => {
   const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return '—';
   return d.toLocaleDateString('ar-SA', { year: 'numeric', month: 'long', day: 'numeric' });
 };
 const initials = (name) => name.split(' ').slice(0, 2).map(x => x[0]).join('');

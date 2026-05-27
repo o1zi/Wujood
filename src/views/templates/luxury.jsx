@@ -188,10 +188,10 @@ const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs 
         <div style={{ maxWidth: 880, margin: '0 auto', textAlign: 'center' }}>
           <div style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 80, color: '#d4a85a', lineHeight: .5, marginBottom: 24 }}>“</div>
           <p style={{ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 'clamp(22px, 2.8vw, 32px)', lineHeight: 1.55, color: 'rgba(244,236,216,.9)' }}>
-            {testimonials[0].text}
+            {testimonials[0]?.text || ''}
           </p>
-          <div style={{ marginTop: 40, fontFamily: "'Montserrat', sans-serif", fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', color: '#d4a85a' }}>— {testimonials[0].name}</div>
-          <div style={{ fontFamily: "'Markazi Text', serif", fontSize: 14, color: 'rgba(244,236,216,.5)', marginTop: 6 }}>{testimonials[0].role}</div>
+          <div style={{ marginTop: 40, fontFamily: "'Montserrat', sans-serif", fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', color: '#d4a85a' }}>— {testimonials[0]?.name || ''}</div>
+          <div style={{ fontFamily: "'Markazi Text', serif", fontSize: 14, color: 'rgba(244,236,216,.5)', marginTop: 6 }}>{testimonials[0]?.role || ''}</div>
         </div>
       </section>
 

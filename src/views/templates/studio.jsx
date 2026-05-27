@@ -198,13 +198,13 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
           </div>
           <div>
             <p style={{ margin: 0, fontFamily: "'Reem Kufi', sans-serif", fontSize: 'clamp(22px, 3vw, 36px)', lineHeight: 1.4, fontWeight: 400, letterSpacing: '-0.015em' }}>
-              {testimonials[0].text}
+              {testimonials[0]?.text || ''}
             </p>
             <div style={{ marginTop: 36, display: 'flex', alignItems: 'center', gap: 14 }}>
               <span style={{ width: 30, height: 1, background: '#7a8c6f' }}></span>
               <div>
-                <div style={{ fontSize: 15, fontWeight: 600 }}>{testimonials[0].name}</div>
-                <div style={{ fontSize: 13, color: 'rgba(250,250,246,.55)', marginTop: 2 }}>{testimonials[0].role}</div>
+                <div style={{ fontSize: 15, fontWeight: 600 }}>{testimonials[0]?.name || ''}</div>
+                <div style={{ fontSize: 13, color: 'rgba(250,250,246,.55)', marginTop: 2 }}>{testimonials[0]?.role || ''}</div>
               </div>
             </div>
           </div>

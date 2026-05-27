@@ -114,7 +114,7 @@ const AdminHome = ({ setPage }) => {
   }, []);
 
   const endingSoon = allTenants.filter(t => t.active && daysUntil(t.ends_at) <= 60 && daysUntil(t.ends_at) > 0);
-  const recent = [...allTenants].sort((a, b) => new Date(b.created_at || b.created) - new Date(a.created_at || a.created)).slice(0, 5);
+  const recent = [...allTenants].sort((a, b) => (new Date(b.created_at || b.created || 0)) - (new Date(a.created_at || a.created || 0))).slice(0, 5);
 
   return (
     <>

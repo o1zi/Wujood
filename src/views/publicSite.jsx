@@ -17,12 +17,14 @@ const PublicSite = ({ slug, template = 'modern', go }) => {
 
   useEffect(() => {
     const load = async () => {
-      setLoading(false);
-      if (!slug || slug === 'demo') {
-        setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS });
-        return;
-      }
       try {
+        if (!slug || slug === 'demo') {
+          setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS });
+          setLoading(false);
+          return;
+        }
+        setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS });
+        setLoading(false);
         const { data: tenant } = await sbGetTenantBySlug(slug);
         if (!tenant) {
           setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS });

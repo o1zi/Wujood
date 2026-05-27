@@ -223,11 +223,11 @@ const TplHeritage = ({ t, projects, services, features, stats, testimonials, faq
         <div style={{ maxWidth: 820, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
           <div style={{ fontFamily: "'Amiri', serif", fontSize: 72, lineHeight: .5, marginBottom: 22, opacity: .6 }}>“</div>
           <p style={{ margin: 0, fontFamily: "'Amiri', serif", fontSize: 'clamp(22px, 2.8vw, 32px)', lineHeight: 1.65, fontWeight: 400 }}>
-            {testimonials[0].text}
+            {testimonials[0]?.text || ''}
           </p>
           <div style={{ width: 50, height: 1, background: '#f4e9d4', margin: '32px auto', opacity: .5 }}></div>
-          <div style={{ fontFamily: "'Amiri', serif", fontSize: 18, fontWeight: 700 }}>— {testimonials[0].name}</div>
-          <div style={{ fontSize: 13, opacity: .8, marginTop: 4, fontFamily: "'Reem Kufi', sans-serif" }}>{testimonials[0].role}</div>
+          <div style={{ fontFamily: "'Amiri', serif", fontSize: 18, fontWeight: 700 }}>— {testimonials[0]?.name || ''}</div>
+          <div style={{ fontSize: 13, opacity: .8, marginTop: 4, fontFamily: "'Reem Kufi', sans-serif" }}>{testimonials[0]?.role || ''}</div>
         </div>
       </section>
 

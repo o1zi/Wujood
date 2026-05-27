@@ -73,8 +73,8 @@ const TplMinimal = ({ t, projects, services, features, stats, testimonials, faqs
           <ProjectCover seed={1} h={620} radius={0} />
           <div style={{ marginTop: 24, display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', fontSize: 13, color: '#9a9a9a' }}>
             <div>
-              <div style={{ color: '#1a1a1a', fontSize: 14, marginBottom: 2, fontWeight: 400 }}>{projects[0].title_ar}</div>
-              <div>{projects[0].location} · {projects[0].year}</div>
+              <div style={{ color: '#1a1a1a', fontSize: 14, marginBottom: 2, fontWeight: 400 }}>{projects[0]?.title_ar || ''}</div>
+              <div>{projects[0]?.location || ''} · {projects[0]?.year || ''}</div>
             </div>
             <div style={{ fontSize: 12 }}>01 / مختارة</div>
           </div>
@@ -157,11 +157,11 @@ const TplMinimal = ({ t, projects, services, features, stats, testimonials, faqs
         <div style={{ maxWidth: 880, margin: '0 auto' }}>
           <div style={{ fontSize: 12, color: '#9a9a9a', marginBottom: 36, letterSpacing: '.04em' }}>⑤ شهادة</div>
           <p style={{ margin: 0, fontSize: 'clamp(22px, 2.5vw, 32px)', lineHeight: 1.55, fontWeight: 300, letterSpacing: '-0.01em' }}>
-            "{testimonials[0].text}"
+            "{testimonials[0]?.text || ''}"
           </p>
           <div style={{ marginTop: 36, fontSize: 14 }}>
-            <span style={{ color: '#1a1a1a' }}>{testimonials[0].name}</span>
-            <span style={{ color: '#9a9a9a', marginInlineStart: 8 }}>— {testimonials[0].role}</span>
+            <span style={{ color: '#1a1a1a' }}>{testimonials[0]?.name || ''}</span>
+            <span style={{ color: '#9a9a9a', marginInlineStart: 8 }}>— {testimonials[0]?.role || ''}</span>
           </div>
         </div>
       </section>

@@ -190,7 +190,8 @@ const TabBar = ({ tabs, active, onChange, fullWidth }) => (
 // Plan pill
 const PlanPill = ({ plan }) => {
   const map = { basic: 'default', pro: 'green', premium: 'gold' };
-  return <Badge tone={map[plan]}>{PLANS[plan].labelAr}</Badge>;
+  const p = PLANS[plan] || PLANS.basic;
+  return <Badge tone={map[plan] || 'default'}>{p.labelAr}</Badge>;
 };
 
 // Sector pill
@@ -262,7 +263,7 @@ const SearchInput = ({ value, onChange, placeholder = 'بحث...' }) => (
       className="wj-input"
       style={{ paddingInlineStart: 38 }}
       value={value || ''}
-      onChange={(e) => onChange(e.target.value)}
+      onChange={(e) => onChange?.(e.target.value)}
       placeholder={placeholder}
     />
     <span style={{ position: 'absolute', insetInlineStart: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--muted)' }}>

@@ -161,11 +161,11 @@ const TplClassic = ({ t, projects, services, features, stats, testimonials, faqs
         <div style={{ maxWidth: 820, margin: '0 auto' }}>
           <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 80, color: '#d4a85a', lineHeight: .5, marginBottom: 24 }}>“</div>
           <p style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 'clamp(22px, 2.5vw, 32px)', lineHeight: 1.6, fontWeight: 400 }}>
-            {testimonials[0].text}
+            {testimonials[0]?.text || ''}
           </p>
           <div style={{ width: 60, height: 1, background: '#d4a85a', margin: '32px auto' }}></div>
-          <div style={{ fontFamily: "'Markazi Text', serif", fontSize: 18, fontWeight: 600 }}>— {testimonials[0].name}</div>
-          <div style={{ fontSize: 13, color: 'rgba(246,239,227,.6)', marginTop: 4, letterSpacing: '.08em' }}>{testimonials[0].role}</div>
+          <div style={{ fontFamily: "'Markazi Text', serif", fontSize: 18, fontWeight: 600 }}>— {testimonials[0]?.name || ''}</div>
+          <div style={{ fontSize: 13, color: 'rgba(246,239,227,.6)', marginTop: 4, letterSpacing: '.08em' }}>{testimonials[0]?.role || ''}</div>
         </div>
       </section>
 

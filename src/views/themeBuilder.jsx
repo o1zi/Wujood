@@ -397,7 +397,9 @@ const ProjectsPanel = ({ theme, upd }) => (
   </div>
 );
 
-const EffectsPanel = ({ theme, upd }) => (
+const EffectsPanel = ({ theme, upd }) => {
+  const [toggles, setToggles] = useState([true, true, true, false, true, true, false, true]);
+  return (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
     <PanelHeading title="التأثيرات البصرية" desc="تأثيرات حركية تُضيف لمسة احترافية." />
     {[
@@ -409,14 +411,15 @@ const EffectsPanel = ({ theme, upd }) => (
       'تكبير صور المشاريع عند المرور',
       'خط متحرك تحت الروابط',
       'نبضة على لون الـ accent',
-    ].map(x => (
+    ].map((x, i) => (
       <div key={x} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: 10, background: 'var(--bg)', borderRadius: 7, border: '1px solid var(--border)' }}>
         <span style={{ fontSize: 13 }}>{x}</span>
-        <Toggle on={Math.random() > 0.4} onChange={() => {}} />
+        <Toggle on={toggles[i]} onChange={(v) => setToggles(prev => prev.map((t, j) => j === i ? v : t))} />
       </div>
     ))}
   </div>
-);
+  );
+};
 
 const IdentityPanel = ({ theme }) => (
   <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
@@ -544,17 +547,6 @@ const ContactPanel = ({ theme, upd }) => (
         عند التفعيل يُظهر نموذج (اسم، إيميل، رسالة)
       </div>
     </Field>
-  </div>
-);
-
-const SimplePanel = ({ title, desc }) => (
-  <div>
-    <PanelHeading title={title} desc={desc} />
-    <div style={{ padding: 28, background: 'var(--bg)', borderRadius: 10, textAlign: 'center', color: 'var(--muted)', fontSize: 13 }}>
-      عناصر تحكم تفصيلية لهذا التبويب —
-      <br/>
-      توجد في النسخة الكاملة من المحرر.
-    </div>
   </div>
 );
 

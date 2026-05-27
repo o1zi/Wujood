@@ -1,9 +1,6 @@
 // Landing — صفحة المنصة التسويقية
 
 const Landing = ({ go }) => {
-  const [active, setActive] = useState('home');
-  const [year, setYear] = useState('سنوي');
-
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       {/* Top bar */}
