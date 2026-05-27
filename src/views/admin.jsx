@@ -65,7 +65,7 @@ const AdminShell = ({ children, page, setPage, go }) => {
               <div style={{ fontSize: 11, fontFamily: 'var(--font-mono)' }}>admin@wujood.sa</div>
             </div>
           </div>
-          <button onClick={() => go('#/')} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,.55)', fontSize: 12 }}>
+          <button onClick={() => sbSignOut().then(() => { sessionStorage.clear(); go('#/'); })} style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'rgba(255,255,255,.55)', fontSize: 12 }}>
             {React.createElement(Icons.logout, { size: 13 })} تسجيل الخروج
           </button>
         </div>
