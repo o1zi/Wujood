@@ -41,24 +41,33 @@ const App = () => {
 
   useEffect(() => {
     sbGetSession().then(async (session) => {
-      if (session?.user) {
-        setUser(session.user);
-        const admin = await sbIsAdmin();
-        setIsAdmin(admin);
-        if (!admin) await refreshTenant();
+      try {
+        if (session?.user) {
+          setUser(session.user);
+          const admin = await sbIsAdmin();
+          setIsAdmin(admin);
+          if (!admin) await refreshTenant();
+        }
+      } catch (e) {
+        console.error('Auth init error:', e);
       }
       setAuthReady(true);
-    });
+    }).catch(() => setAuthReady(true));
 
     const { data: { subscription } } = sbOnAuthChange(async (event, session) => {
-      if (session?.user) {
-        setUser(session.user);
-        const admin = await sbIsAdmin();
-        setIsAdmin(admin);
-        if (!admin) await refreshTenant();
-        else setTenant(null);
-      } else {
-        setUser(null); setIsAdmin(false); setTenant(null);
+      try {
+        if (session?.user) {
+          setUser(session.user);
+          const admin = await sbIsAdmin();
+          setIsAdmin(admin);
+          if (!admin) await refreshTenant();
+          else setTenant(null);
+        } else {
+          setUser(null); setIsAdmin(false); setTenant(null);
+        }
+      } catch (e) {
+        console.error('Auth change error:', e);
+        setAuthReady(true);
       }
     });
 
