@@ -67,9 +67,8 @@ const App = () => {
   }, []);
 
   if (!authReady) return (
-    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: 16, background: 'var(--bg)' }}>
-      <Logo size={32} />
-      <p style={{ color: 'var(--muted)', fontSize: 14, margin: 0 }}>جاري التحميل...</p>
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: 8, background: 'var(--bg)' }}>
+      <Logo size={28} />
     </div>
   );
 
