@@ -1,23 +1,30 @@
 // Supabase client + data layer — Wujood Platform
 
 const ENV = window.__ENV__ || {};
-const SUPABASE_URL  = ENV.SUPABASE_URL  || 'MISSING_SUPABASE_URL';
-const SUPABASE_ANON = ENV.SUPABASE_ANON || 'MISSING_SUPABASE_ANON';
+const SUPABASE_URL  = ENV.SUPABASE_URL  || '';
+const SUPABASE_ANON = ENV.SUPABASE_ANON || '';
 const SUPABASE_SVC  = ENV.SUPABASE_SVC  || SUPABASE_ANON;
 
 const _createClient = window.supabase.createClient;
 
-if (!ENV.SUPABASE_URL) console.warn('⚠️ .env.js مفقود — تأكد من وجود ملف البيئة أو متغيرات Vercel');
+if (!SUPABASE_URL || SUPABASE_URL.length < 10) {
+  console.error('🚫 متغيرات Supabase مفقودة. تأكد من إعداد SUPABASE_URL في Vercel.');
+  window.__ENV_MISSING__ = true;
+} else {
+  window.__ENV_MISSING__ = false;
+}
 
-// Main client — regular user sessions
-const sb = _createClient(SUPABASE_URL, SUPABASE_ANON, {
-  auth: { persistSession: true, storageKey: 'wujood_session' },
-});
-
-// Admin client — service role, never persists a session
-const sbAdm = _createClient(SUPABASE_URL, SUPABASE_SVC, {
-  auth: { persistSession: false, autoRefreshToken: false },
-});
+// Main client — only create if env is set
+let sb = null;
+let sbAdm = null;
+if (!window.__ENV_MISSING__) {
+  sb = _createClient(SUPABASE_URL, SUPABASE_ANON, {
+    auth: { persistSession: true, storageKey: 'wujood_session' },
+  });
+  sbAdm = _createClient(SUPABASE_URL, SUPABASE_SVC, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+}
 
 // ── Field mappers (DB → app) ──────────────────────────────────
 const mapSvc  = s => ({ ...s, desc: s.description });

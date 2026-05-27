@@ -13,6 +13,22 @@ const useHashRoute = () => {
 const App = () => {
   const [hash, go]      = useHashRoute();
   const route           = hash.replace(/^#/, '') || '/';
+
+  if (window.__ENV_MISSING__) {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: 16, background: 'var(--bg)' }}>
+        <Logo size={32} />
+        <div style={{ maxWidth: 500, textAlign: 'center', padding: '0 20px' }}>
+          <h2 style={{ margin: '0 0 12px', fontFamily: 'var(--font-display)', fontSize: 22, color: 'var(--danger)' }}>خطأ في الإعداد</h2>
+          <p style={{ color: 'var(--muted)', fontSize: 14, lineHeight: 1.7, margin: 0 }}>
+            متغيرات البيئة (SUPABASE_URL) غير مضبوطة.
+            <br/>
+            تأكد من إضافتها في <strong>Vercel Dashboard → Settings → Environment Variables</strong> ثم أعد النشر.
+          </p>
+        </div>
+      </div>
+    );
+  }
   const [authReady, setAuthReady] = useState(false);
   const [user,   setUser]   = useState(null);
   const [isAdmin,setIsAdmin]= useState(false);
