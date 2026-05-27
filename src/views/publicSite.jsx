@@ -16,29 +16,22 @@ const PublicSite = ({ slug, template = 'modern', go }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let cancelled = false;
-    const timeout = setTimeout(() => {
-      if (!cancelled) { setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS }); setLoading(false); }
-    }, 8000);
-
     const load = async () => {
+      setLoading(false);
+      if (!slug || slug === 'demo') {
+        setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS });
+        return;
+      }
       try {
-        if (!slug || slug === 'demo') {
-          if (!cancelled) { setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS }); setLoading(false); }
-          return;
-        }
         const { data: tenant } = await sbGetTenantBySlug(slug);
-        if (cancelled) return;
         if (!tenant) {
           setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS });
-          setLoading(false);
           return;
         }
         const [projRes, svcRes, statsRes, testiRes, faqRes] = await Promise.all([
           sbGetProjects(tenant.id), sbGetServices(tenant.id), sbGetStats(tenant.id),
           sbGetTestimonials(tenant.id), sbGetFaqs(tenant.id),
         ]);
-        if (cancelled) return;
         setData({
           t: tenant,
           projects: projRes?.data?.length ? projRes.data : DEMO_PROJECTS,
@@ -48,15 +41,12 @@ const PublicSite = ({ slug, template = 'modern', go }) => {
           testimonials: testiRes?.data?.length ? testiRes.data : DEMO_TESTIMONIALS,
           faqs: faqRes?.data?.length ? faqRes.data : DEMO_FAQS,
         });
-        setLoading(false);
       } catch (e) {
         console.error('PublicSite load error:', e);
-        if (!cancelled) { setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS }); setLoading(false); }
+        setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS });
       }
     };
-
     load();
-    return () => { cancelled = true; clearTimeout(timeout); };
   }, [slug]);
 
   if (loading) {
