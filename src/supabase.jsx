@@ -31,11 +31,10 @@ const showToast = (msg, tone = 'ok') => {
 };
 
 // ── Auth ──────────────────────────────────────────────────────
-const sbSignIn = (email, pw) =>
-  Promise.race([
-    sb.auth.signInWithPassword({ email, password: pw }),
-    new Promise((_, reject) => setTimeout(() => reject(new Error('انتهت مهلة الاتصال')), 15000)),
-  ]);
+const sbSignIn = (email, pw) => {
+  if (!sb || !sb.auth) return Promise.reject(new Error('Supabase client not ready'));
+  return sb.auth.signInWithPassword({ email, password: pw });
+};
 const sbSignOut = async () => {
   sessionStorage.removeItem('wujood_admin');
   try { await sb.auth.signOut(); } catch (e) {}

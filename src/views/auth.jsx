@@ -17,6 +17,7 @@ const Auth = ({ go }) => {
     try {
       result = await sbSignIn(email, password);
     } catch (err) {
+      console.error('Login error:', err);
       setError('حدث خطأ في الاتصال. حاول مرة أخرى.');
       setLoading(false);
       return;
