@@ -40,6 +40,11 @@ const App = () => {
   };
 
   useEffect(() => {
+    if (typeof sbGetSession !== 'function') {
+      console.error('sbGetSession not available, setting authReady');
+      setAuthReady(true);
+      return;
+    }
     sbGetSession().then(async (session) => {
       try {
         if (session?.user) {
@@ -54,6 +59,7 @@ const App = () => {
       setAuthReady(true);
     }).catch(() => setAuthReady(true));
 
+    if (typeof sbOnAuthChange === 'function') {
     const { data: { subscription } } = sbOnAuthChange(async (event, session) => {
       try {
         if (session?.user) {
@@ -71,7 +77,9 @@ const App = () => {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => subscription?.unsubscribe?.();
+    }
+    return () => {};
   }, []);
 
   if (!authReady) return (
