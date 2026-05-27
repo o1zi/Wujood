@@ -1,10 +1,10 @@
 -- ============================================================
 -- Wujood Platform — Database Schema v1.0
--- افتح Supabase SQL Editor وشغّل هذا الملف كاملاً
+-- Idempotent: safe to run multiple times
 -- ============================================================
 
 -- ======================================
--- ADMINS (must come first — referenced by is_admin)
+-- ADMINS
 -- ======================================
 CREATE TABLE IF NOT EXISTS admins (
   id    UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
@@ -55,10 +55,14 @@ CREATE TABLE IF NOT EXISTS tenants (
 );
 
 ALTER TABLE tenants ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "public_active"    ON tenants FOR SELECT USING (active = true);
-CREATE POLICY "owner_select"     ON tenants FOR SELECT USING (owner_id = auth.uid());
-CREATE POLICY "owner_update"     ON tenants FOR UPDATE USING (owner_id = auth.uid());
-CREATE POLICY "admin_all"        ON tenants FOR ALL    USING (is_admin());
+DROP POLICY IF EXISTS "public_active"   ON tenants;
+DROP POLICY IF EXISTS "owner_select"    ON tenants;
+DROP POLICY IF EXISTS "owner_update"    ON tenants;
+DROP POLICY IF EXISTS "admin_all"       ON tenants;
+CREATE POLICY "public_active" ON tenants FOR SELECT USING (active = true);
+CREATE POLICY "owner_select"  ON tenants FOR SELECT USING (owner_id = auth.uid());
+CREATE POLICY "owner_update"  ON tenants FOR UPDATE USING (owner_id = auth.uid());
+CREATE POLICY "admin_all"     ON tenants FOR ALL    USING (is_admin());
 
 -- ======================================
 -- PROJECTS
@@ -86,11 +90,13 @@ CREATE TABLE IF NOT EXISTS projects (
 );
 
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "public_projects"  ON projects FOR SELECT USING (EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND active = true));
-CREATE POLICY "owner_all_proj"   ON projects FOR ALL    USING (is_admin() OR EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND owner_id = auth.uid()));
+DROP POLICY IF EXISTS "public_projects" ON projects;
+DROP POLICY IF EXISTS "owner_all_proj"  ON projects;
+CREATE POLICY "public_projects" ON projects FOR SELECT USING (EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND active = true));
+CREATE POLICY "owner_all_proj"  ON projects FOR ALL    USING (is_admin() OR EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND owner_id = auth.uid()));
 
 -- ======================================
--- SERVICES  (type = 'service' | 'feature')
+-- SERVICES
 -- ======================================
 CREATE TABLE IF NOT EXISTS services (
   id          UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -104,8 +110,10 @@ CREATE TABLE IF NOT EXISTS services (
 );
 
 ALTER TABLE services ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "public_services"  ON services FOR SELECT USING (published = true AND EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND active = true));
-CREATE POLICY "owner_all_srv"    ON services FOR ALL    USING (is_admin() OR EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND owner_id = auth.uid()));
+DROP POLICY IF EXISTS "public_services" ON services;
+DROP POLICY IF EXISTS "owner_all_srv"   ON services;
+CREATE POLICY "public_services" ON services FOR SELECT USING (published = true AND EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND active = true));
+CREATE POLICY "owner_all_srv"   ON services FOR ALL    USING (is_admin() OR EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND owner_id = auth.uid()));
 
 -- ======================================
 -- STATS
@@ -120,6 +128,8 @@ CREATE TABLE IF NOT EXISTS stats (
 );
 
 ALTER TABLE stats ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "public_stats"    ON stats;
+DROP POLICY IF EXISTS "owner_all_stats" ON stats;
 CREATE POLICY "public_stats"    ON stats FOR SELECT USING (EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND active = true));
 CREATE POLICY "owner_all_stats" ON stats FOR ALL    USING (is_admin() OR EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND owner_id = auth.uid()));
 
@@ -138,8 +148,10 @@ CREATE TABLE IF NOT EXISTS testimonials (
 );
 
 ALTER TABLE testimonials ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "public_testi"   ON testimonials FOR SELECT USING (published = true AND EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND active = true));
-CREATE POLICY "owner_all_testi"ON testimonials FOR ALL    USING (is_admin() OR EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND owner_id = auth.uid()));
+DROP POLICY IF EXISTS "public_testi"    ON testimonials;
+DROP POLICY IF EXISTS "owner_all_testi" ON testimonials;
+CREATE POLICY "public_testi"    ON testimonials FOR SELECT USING (published = true AND EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND active = true));
+CREATE POLICY "owner_all_testi" ON testimonials FOR ALL    USING (is_admin() OR EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND owner_id = auth.uid()));
 
 -- ======================================
 -- FAQS
@@ -154,6 +166,8 @@ CREATE TABLE IF NOT EXISTS faqs (
 );
 
 ALTER TABLE faqs ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "public_faqs"    ON faqs;
+DROP POLICY IF EXISTS "owner_all_faqs" ON faqs;
 CREATE POLICY "public_faqs"    ON faqs FOR SELECT USING (published = true AND EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND active = true));
 CREATE POLICY "owner_all_faqs" ON faqs FOR ALL    USING (is_admin() OR EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND owner_id = auth.uid()));
 
@@ -172,6 +186,8 @@ CREATE TABLE IF NOT EXISTS subscription_logs (
 );
 
 ALTER TABLE subscription_logs ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "owner_select_logs" ON subscription_logs;
+DROP POLICY IF EXISTS "admin_all_logs"    ON subscription_logs;
 CREATE POLICY "owner_select_logs" ON subscription_logs FOR SELECT USING (is_admin() OR EXISTS (SELECT 1 FROM tenants WHERE id = tenant_id AND owner_id = auth.uid()));
 CREATE POLICY "admin_all_logs"    ON subscription_logs FOR ALL    USING (is_admin());
 
@@ -187,6 +203,7 @@ CREATE TABLE IF NOT EXISTS platform_settings (
 );
 
 ALTER TABLE platform_settings ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "admin_settings" ON platform_settings;
 CREATE POLICY "admin_settings" ON platform_settings FOR ALL USING (is_admin());
 
 INSERT INTO platform_settings (id, name, domain, whatsapp)
@@ -203,20 +220,32 @@ VALUES
   ('projects', 'projects', true, 10485760, ARRAY['image/jpeg','image/webp','image/png'])
 ON CONFLICT (id) DO NOTHING;
 
-CREATE POLICY "pub_read_logos"    ON storage.objects FOR SELECT  USING (bucket_id = 'logos');
-CREATE POLICY "auth_write_logos"  ON storage.objects FOR INSERT  WITH CHECK (bucket_id = 'logos'    AND auth.uid() IS NOT NULL);
-CREATE POLICY "auth_update_logos" ON storage.objects FOR UPDATE  USING (bucket_id = 'logos'         AND auth.uid() IS NOT NULL);
-CREATE POLICY "auth_delete_logos" ON storage.objects FOR DELETE  USING (bucket_id = 'logos'         AND auth.uid() IS NOT NULL);
+DROP POLICY IF EXISTS "pub_read_logos"    ON storage.objects;
+DROP POLICY IF EXISTS "auth_write_logos"  ON storage.objects;
+DROP POLICY IF EXISTS "auth_update_logos" ON storage.objects;
+DROP POLICY IF EXISTS "auth_delete_logos" ON storage.objects;
+CREATE POLICY "pub_read_logos"    ON storage.objects FOR SELECT USING (bucket_id = 'logos');
+CREATE POLICY "auth_write_logos"  ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'logos' AND auth.uid() IS NOT NULL);
+CREATE POLICY "auth_update_logos" ON storage.objects FOR UPDATE USING      (bucket_id = 'logos' AND auth.uid() IS NOT NULL);
+CREATE POLICY "auth_delete_logos" ON storage.objects FOR DELETE USING      (bucket_id = 'logos' AND auth.uid() IS NOT NULL);
 
-CREATE POLICY "pub_read_covers"    ON storage.objects FOR SELECT  USING (bucket_id = 'covers');
-CREATE POLICY "auth_write_covers"  ON storage.objects FOR INSERT  WITH CHECK (bucket_id = 'covers'  AND auth.uid() IS NOT NULL);
-CREATE POLICY "auth_update_covers" ON storage.objects FOR UPDATE  USING (bucket_id = 'covers'       AND auth.uid() IS NOT NULL);
-CREATE POLICY "auth_delete_covers" ON storage.objects FOR DELETE  USING (bucket_id = 'covers'       AND auth.uid() IS NOT NULL);
+DROP POLICY IF EXISTS "pub_read_covers"    ON storage.objects;
+DROP POLICY IF EXISTS "auth_write_covers"  ON storage.objects;
+DROP POLICY IF EXISTS "auth_update_covers" ON storage.objects;
+DROP POLICY IF EXISTS "auth_delete_covers" ON storage.objects;
+CREATE POLICY "pub_read_covers"    ON storage.objects FOR SELECT USING (bucket_id = 'covers');
+CREATE POLICY "auth_write_covers"  ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'covers' AND auth.uid() IS NOT NULL);
+CREATE POLICY "auth_update_covers" ON storage.objects FOR UPDATE USING      (bucket_id = 'covers' AND auth.uid() IS NOT NULL);
+CREATE POLICY "auth_delete_covers" ON storage.objects FOR DELETE USING      (bucket_id = 'covers' AND auth.uid() IS NOT NULL);
 
-CREATE POLICY "pub_read_projects"    ON storage.objects FOR SELECT  USING (bucket_id = 'projects');
-CREATE POLICY "auth_write_projects"  ON storage.objects FOR INSERT  WITH CHECK (bucket_id = 'projects' AND auth.uid() IS NOT NULL);
-CREATE POLICY "auth_update_projects" ON storage.objects FOR UPDATE  USING (bucket_id = 'projects'    AND auth.uid() IS NOT NULL);
-CREATE POLICY "auth_delete_projects" ON storage.objects FOR DELETE  USING (bucket_id = 'projects'    AND auth.uid() IS NOT NULL);
+DROP POLICY IF EXISTS "pub_read_projects"    ON storage.objects;
+DROP POLICY IF EXISTS "auth_write_projects"  ON storage.objects;
+DROP POLICY IF EXISTS "auth_update_projects" ON storage.objects;
+DROP POLICY IF EXISTS "auth_delete_projects" ON storage.objects;
+CREATE POLICY "pub_read_projects"    ON storage.objects FOR SELECT USING (bucket_id = 'projects');
+CREATE POLICY "auth_write_projects"  ON storage.objects FOR INSERT WITH CHECK (bucket_id = 'projects' AND auth.uid() IS NOT NULL);
+CREATE POLICY "auth_update_projects" ON storage.objects FOR UPDATE USING      (bucket_id = 'projects' AND auth.uid() IS NOT NULL);
+CREATE POLICY "auth_delete_projects" ON storage.objects FOR DELETE USING      (bucket_id = 'projects' AND auth.uid() IS NOT NULL);
 
 -- ======================================
 -- AUTO updated_at
@@ -225,13 +254,13 @@ CREATE OR REPLACE FUNCTION set_updated_at()
 RETURNS TRIGGER LANGUAGE plpgsql AS $$
 BEGIN NEW.updated_at = NOW(); RETURN NEW; END;
 $$;
+DROP TRIGGER IF EXISTS tenants_updated_at ON tenants;
 CREATE TRIGGER tenants_updated_at BEFORE UPDATE ON tenants FOR EACH ROW EXECUTE FUNCTION set_updated_at();
 
 -- ======================================
--- HOW TO ADD FIRST ADMIN USER
+-- HOW TO ADD FIRST ADMIN USER (after running this SQL)
 -- ======================================
--- 1. Go to Supabase → Authentication → Users → "Invite user"
---    (or Add User) with email admin@wujood.sa and a password.
--- 2. Copy the user's UUID from the Users list.
--- 3. Run:  INSERT INTO admins (id, name, email) VALUES ('<UUID>', 'مالك المنصة', 'admin@wujood.sa');
--- 4. Log in with that email/password via the /login page and select "أدمن المنصة".
+-- 1. Supabase Dashboard → Authentication → Users → Add User
+-- 2. Copy the new user's UUID
+-- 3. SQL Editor: INSERT INTO admins (id, name, email) VALUES ('<UUID>', 'اسم الأدمن', 'admin@wujood.sa');
+-- 4. Login at /login and choose "أدمن المنصة"
