@@ -73,19 +73,21 @@ const App = () => {
   );
 
   let view;
+  const isAdminEffective = isAdmin || sessionStorage.getItem('wujood_admin') === '1';
   if (route === '/' || route === '') {
     view = <Landing go={go} />;
   } else if (route === '/login') {
-    if (user) { setTimeout(() => go(isAdmin ? '#/admin' : '#/dashboard'), 0); return null; }
+    if (user) { setTimeout(() => go(isAdminEffective ? '#/admin' : '#/dashboard'), 0); return null; }
     view = <Auth go={go} />;
   } else if (route.startsWith('/dashboard')) {
     if (!user) { setTimeout(() => go('#/login'), 0); return null; }
-    if (isAdmin) { setTimeout(() => go('#/admin'), 0); return null; }
+    if (isAdminEffective) { setTimeout(() => go('#/admin'), 0); return null; }
     view = <Tenant go={go} tenant={tenant} setTenant={setTenant} />;
   } else if (route === '/theme-builder') {
     view = <ThemeBuilder go={go} />;
   } else if (route.startsWith('/admin')) {
-    if (!user || !isAdmin) { setTimeout(() => go('#/login'), 0); return null; }
+    if (!user) { setTimeout(() => go('#/login'), 0); return null; }
+    if (!isAdminEffective) { setTimeout(() => go('#/dashboard'), 0); return null; }
     view = <Admin go={go} />;
   } else if (route.startsWith('/site/')) {
     const parts = route.split('/site/')[1].split('/');

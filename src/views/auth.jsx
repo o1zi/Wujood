@@ -29,9 +29,15 @@ const Auth = ({ go }) => {
       return;
     }
 
+    sessionStorage.setItem('wujood_admin', admin ? '1' : '0');
     go(admin ? '#/admin' : '#/dashboard');
     setLoading(false);
   };
+
+  useEffect(() => {
+    const loginHint = sessionStorage.getItem('wujood_login_role');
+    if (loginHint === 'admin') { setRole('admin'); sessionStorage.removeItem('wujood_login_role'); }
+  }, []);
 
   return (
     <div style={{ minHeight: '100vh', display: 'grid', gridTemplateColumns: '1fr 1fr' }} className="auth-grid">
