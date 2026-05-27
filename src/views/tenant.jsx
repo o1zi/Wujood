@@ -1333,26 +1333,31 @@ const Tenant = ({ go, tenant, setTenant }) => {
   const [checking, setChecking] = useState(!tenant);
   const [userEmail, setUserEmail] = useState('');
 
-  // Auto-fetch tenant on mount if not yet loaded (handles session restore timing)
+  // Auto-fetch tenant on mount with a 6-second hard timeout
   useEffect(() => {
     if (tenant) { setChecking(false); return; }
     let cancelled = false;
-    const fetch = async () => {
+    const done = () => { if (!cancelled) setChecking(false); };
+    const timer = setTimeout(done, 6000); // safety net — never stay spinning
+
+    const fetchTenant = async () => {
       try {
         const session = await sbGetSession();
         if (session?.user?.email && !cancelled) setUserEmail(session.user.email);
         const { data } = await sbGetMyTenant();
         if (!cancelled) {
           if (data) setTenant(data);
+          clearTimeout(timer);
           setChecking(false);
         }
       } catch(e) {
         console.error('Tenant fetch error:', e);
-        if (!cancelled) setChecking(false);
+        clearTimeout(timer);
+        done();
       }
     };
-    fetch();
-    return () => { cancelled = true; };
+    fetchTenant();
+    return () => { cancelled = true; clearTimeout(timer); };
   }, []);
 
   const [retrying, setRetrying] = useState(false);
