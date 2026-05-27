@@ -1330,6 +1330,30 @@ const TenantAnalytics = () => (
 // ── Main Tenant component ─────────────────────────────────────
 const Tenant = ({ go, tenant, setTenant }) => {
   const [page, setPage] = useState('home');
+  const [checking, setChecking] = useState(!tenant);
+  const [userEmail, setUserEmail] = useState('');
+
+  // Auto-fetch tenant on mount if not yet loaded (handles session restore timing)
+  useEffect(() => {
+    if (tenant) { setChecking(false); return; }
+    let cancelled = false;
+    const fetch = async () => {
+      try {
+        const session = await sbGetSession();
+        if (session?.user?.email && !cancelled) setUserEmail(session.user.email);
+        const { data } = await sbGetMyTenant();
+        if (!cancelled) {
+          if (data) setTenant(data);
+          setChecking(false);
+        }
+      } catch(e) {
+        console.error('Tenant fetch error:', e);
+        if (!cancelled) setChecking(false);
+      }
+    };
+    fetch();
+    return () => { cancelled = true; };
+  }, []);
 
   const [retrying, setRetrying] = useState(false);
   const retry = async () => {
@@ -1341,11 +1365,20 @@ const Tenant = ({ go, tenant, setTenant }) => {
     setRetrying(false);
   };
 
+  if (checking) return (
+    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: 12, background: 'var(--bg)' }}>
+      <Logo size={28} />
+      <div style={{ width: 28, height: 28, border: '2px solid var(--border)', borderTopColor: 'var(--primary)', borderRadius: '50%', animation: 'spin 0.7s linear infinite' }} />
+      <div style={{ fontSize: 14, color: 'var(--muted)' }}>جاري تحميل بيانات مكتبك...</div>
+    </div>
+  );
+
   if (!tenant) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: 16, background: 'var(--bg)' }}>
       <Logo size={32} />
       <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 22 }}>لا يوجد مكتب مرتبط بحسابك</h2>
       <p style={{ color: 'var(--muted)', fontSize: 14, margin: 0 }}>تواصل مع مدير المنصة لتفعيل حسابك.</p>
+      {userEmail && <p className="mono" style={{ fontSize: 12, color: 'var(--muted)', margin: 0, padding: '6px 14px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8 }}>{userEmail}</p>}
       <Btn kind="primary" icon="refresh" onClick={retry} disabled={retrying}>{retrying ? 'جاري المحاولة...' : 'إعادة المحاولة'}</Btn>
       <Btn kind="secondary" icon="whatsapp" onClick={() => window.open('https://wa.me/966500000000','_blank')}>تواصل عبر واتساب</Btn>
       <Btn kind="ghost" onClick={() => sbSignOut().then(() => go('#/'))}>تسجيل خروج</Btn>
