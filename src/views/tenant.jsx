@@ -1328,35 +1328,26 @@ const TenantAnalytics = () => (
 );
 
 // ── Main Tenant component ─────────────────────────────────────
-const Tenant = ({ go, tenant, setTenant }) => {
+const Tenant = ({ go, tenant, setTenant, user }) => {
   const [page, setPage] = useState('home');
   const [checking, setChecking] = useState(!tenant);
-  const [userEmail, setUserEmail] = useState('');
 
-  // Auto-fetch tenant on mount with a 6-second hard timeout
+  // Auto-fetch on mount — bypasses any hanging sbGetSession by using the
+  // user object already resolved by App's auth init
   useEffect(() => {
     if (tenant) { setChecking(false); return; }
     let cancelled = false;
-    const done = () => { if (!cancelled) setChecking(false); };
-    const timer = setTimeout(done, 6000); // safety net — never stay spinning
+    const timer = setTimeout(() => { if (!cancelled) setChecking(false); }, 6000);
 
-    const fetchTenant = async () => {
-      try {
-        const session = await sbGetSession();
-        if (session?.user?.email && !cancelled) setUserEmail(session.user.email);
-        const { data } = await sbGetMyTenant();
-        if (!cancelled) {
-          if (data) setTenant(data);
-          clearTimeout(timer);
-          setChecking(false);
-        }
-      } catch(e) {
-        console.error('Tenant fetch error:', e);
-        clearTimeout(timer);
-        done();
-      }
-    };
-    fetchTenant();
+    sbGetMyTenant().then(({ data }) => {
+      if (cancelled) return;
+      clearTimeout(timer);
+      if (data) setTenant(data);
+      setChecking(false);
+    }).catch(() => {
+      if (!cancelled) { clearTimeout(timer); setChecking(false); }
+    });
+
     return () => { cancelled = true; clearTimeout(timer); };
   }, []);
 
@@ -1383,7 +1374,16 @@ const Tenant = ({ go, tenant, setTenant }) => {
       <Logo size={32} />
       <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 22 }}>لا يوجد مكتب مرتبط بحسابك</h2>
       <p style={{ color: 'var(--muted)', fontSize: 14, margin: 0 }}>تواصل مع مدير المنصة لتفعيل حسابك.</p>
-      {userEmail && <p className="mono" style={{ fontSize: 12, color: 'var(--muted)', margin: 0, padding: '6px 14px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8 }}>{userEmail}</p>}
+      {user?.email && (
+        <p className="mono" style={{ fontSize: 12, color: 'var(--muted)', margin: 0, padding: '6px 14px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8 }}>
+          {user.email}
+        </p>
+      )}
+      {user?.id && (
+        <p className="mono" style={{ fontSize: 10, color: 'var(--muted)', margin: 0, padding: '4px 10px', background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 8, opacity: 0.7 }}>
+          ID: {user.id}
+        </p>
+      )}
       <Btn kind="primary" icon="refresh" onClick={retry} disabled={retrying}>{retrying ? 'جاري المحاولة...' : 'إعادة المحاولة'}</Btn>
       <Btn kind="secondary" icon="whatsapp" onClick={() => window.open('https://wa.me/966500000000','_blank')}>تواصل عبر واتساب</Btn>
       <Btn kind="ghost" onClick={() => sbSignOut().then(() => go('#/'))}>تسجيل خروج</Btn>

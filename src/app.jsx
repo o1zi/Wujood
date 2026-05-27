@@ -101,7 +101,7 @@ const App = () => {
   } else if (route.startsWith('/dashboard')) {
     if (!user && !sessionStorage.getItem('wujood_admin')) { setTimeout(() => go('#/login'), 0); return null; }
     if (isAdminEffective) { setTimeout(() => go('#/admin'), 0); return null; }
-    view = <Tenant go={go} tenant={tenant} setTenant={setTenant} />;
+    view = <Tenant go={go} tenant={tenant} setTenant={setTenant} user={user} />;
   } else if (route === '/theme-builder') {
     view = <ThemeBuilder go={go} />;
   } else if (route.startsWith('/admin')) {
