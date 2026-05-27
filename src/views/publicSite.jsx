@@ -16,40 +16,47 @@ const PublicSite = ({ slug, template = 'modern', go }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!slug || slug === 'demo') {
-      setData({
-        t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES,
-        features: DEMO_FEATURES, stats: DEMO_STATS,
-        testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS,
-      });
-      setLoading(false);
-      return;
-    }
+    let cancelled = false;
+    const timeout = setTimeout(() => {
+      if (!cancelled) { setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS }); setLoading(false); }
+    }, 8000);
 
-    sbGetTenantBySlug(slug).then(async ({ data: tenant }) => {
-      if (!tenant) {
-        setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS });
+    const load = async () => {
+      try {
+        if (!slug || slug === 'demo') {
+          if (!cancelled) { setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS }); setLoading(false); }
+          return;
+        }
+        const { data: tenant } = await sbGetTenantBySlug(slug);
+        if (cancelled) return;
+        if (!tenant) {
+          setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS });
+          setLoading(false);
+          return;
+        }
+        const [projRes, svcRes, statsRes, testiRes, faqRes] = await Promise.all([
+          sbGetProjects(tenant.id), sbGetServices(tenant.id), sbGetStats(tenant.id),
+          sbGetTestimonials(tenant.id), sbGetFaqs(tenant.id),
+        ]);
+        if (cancelled) return;
+        setData({
+          t: tenant,
+          projects: projRes?.data?.length ? projRes.data : DEMO_PROJECTS,
+          services: svcRes?.data?.length ? svcRes.data : DEMO_SERVICES,
+          features: (svcRes?.data || []).filter(s => s.type === 'feature').length > 0 ? svcRes.data.filter(s => s.type === 'feature') : DEMO_FEATURES,
+          stats: statsRes?.data?.length ? statsRes.data : DEMO_STATS,
+          testimonials: testiRes?.data?.length ? testiRes.data : DEMO_TESTIMONIALS,
+          faqs: faqRes?.data?.length ? faqRes.data : DEMO_FAQS,
+        });
         setLoading(false);
-        return;
+      } catch (e) {
+        console.error('PublicSite load error:', e);
+        if (!cancelled) { setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS }); setLoading(false); }
       }
-      const [projRes, svcRes, statsRes, testiRes, faqRes] = await Promise.all([
-        sbGetProjects(tenant.id), sbGetServices(tenant.id), sbGetStats(tenant.id),
-        sbGetTestimonials(tenant.id), sbGetFaqs(tenant.id),
-      ]);
-      setData({
-        t: tenant,
-        projects: projRes?.data?.length ? projRes.data : DEMO_PROJECTS,
-        services: svcRes?.data?.length ? svcRes.data : DEMO_SERVICES,
-        features: (svcRes?.data || []).filter(s => s.type === 'feature').length > 0 ? svcRes.data.filter(s => s.type === 'feature') : DEMO_FEATURES,
-        stats: statsRes?.data?.length ? statsRes.data : DEMO_STATS,
-        testimonials: testiRes?.data?.length ? testiRes.data : DEMO_TESTIMONIALS,
-        faqs: faqRes?.data?.length ? faqRes.data : DEMO_FAQS,
-      });
-      setLoading(false);
-    }).catch(() => {
-      setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS });
-      setLoading(false);
-    });
+    };
+
+    load();
+    return () => { cancelled = true; clearTimeout(timeout); };
   }, [slug]);
 
   if (loading) {
