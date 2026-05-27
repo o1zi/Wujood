@@ -96,8 +96,6 @@ const App = () => {
   if (route === '/' || route === '') {
     view = <Landing go={go} />;
   } else if (route === '/login') {
-    if (user && tenant && !isAdminEffective) { setTimeout(() => go('/dashboard'), 0); return null; }
-    if (user && isAdminEffective) { setTimeout(() => go('/admin'), 0); return null; }
     view = <Auth go={go} />;
   } else if (route.startsWith('/dashboard')) {
     if (!user && !sessionStorage.getItem('wujood_admin')) { setTimeout(() => go('/login'), 0); return null; }
