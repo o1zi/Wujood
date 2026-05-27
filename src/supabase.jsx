@@ -1,9 +1,9 @@
 // Supabase client + data layer — Wujood Platform
 
 const ENV = window.__ENV__ || {};
-const SUPABASE_URL  = ENV.SUPABASE_URL  || 'https://sizvdycairulufrftcdb.supabase.co';
-const SUPABASE_ANON = ENV.SUPABASE_ANON || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpenZkeWNhaXJ1bHVmcmZ0Y2RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MjM3MTYsImV4cCI6MjA5NTM5OTcxNn0.ucP-dinX7k_zxwKJT9QkdjNK7YtiAtTSng0DPXpzHSU';
-const SUPABASE_SVC  = ENV.SUPABASE_SVC  || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpenZkeWNhaXJ1bHVmcmZ0Y2RiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTgyMzcxNiwiZXhwIjoyMDk1Mzk5NzE2fQ.uXXh_FYrjXN3OeJwe1EGPVnSqkl5wRPvKh10xmdLHaQ';
+const SUPABASE_URL  = ENV.SUPABASE_URL  || 'https://aslqblelcwjpduzmcyxn.supabase.co';
+const SUPABASE_ANON = ENV.SUPABASE_ANON || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzbHFibGVsY3dqcGR1em1jeXhuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4NTQ0OTEsImV4cCI6MjA5NTQzMDQ5MX0.amSCUOQp8pCG9qNh8V9RMOn1BnjbclCNowIM5uj4VPw';
+const SUPABASE_SVC  = ENV.SUPABASE_SVC  || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImFzbHFibGVsY3dqcGR1em1jeXhuIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTg1NDQ5MSwiZXhwIjoyMDk1NDMwNDkxfQ.M3o8pKsdWPP57n5gPss6YuumhJkE9AB8vfv-g0vfKik';
 
 const _createClient = window.supabase.createClient;
 
