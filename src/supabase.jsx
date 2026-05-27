@@ -37,18 +37,18 @@ const sbGetSession = async () => { const { data: { session } } = await sb.auth.g
 const sbOnAuthChange = cb => sb.auth.onAuthStateChange(cb);
 const sbIsAdmin = async () => {
   try {
-    const { data: { user } } = await sb.auth.getUser();
-    if (!user) return false;
-    const { data } = await sbAdm.from('admins').select('id').eq('id', user.id).maybeSingle();
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session?.user) return false;
+    const { data } = await sbAdm.from('admins').select('id').eq('id', session.user.id).maybeSingle();
     return !!data;
-  } catch (e) { console.error('sbIsAdmin error:', e); return false; }
+  } catch (e) { return false; }
 };
 
 // ── Tenant ────────────────────────────────────────────────────
 const sbGetMyTenant = async () => {
-  const { data: { user } } = await sb.auth.getUser();
-  if (!user) return { data: null, error: 'no_user' };
-  return sb.from('tenants').select('*').eq('owner_id', user.id).maybeSingle();
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session?.user) return { data: null, error: 'no_user' };
+  return sb.from('tenants').select('*').eq('owner_id', session.user.id).maybeSingle();
 };
 
 const sbGetTenantBySlug = slug =>

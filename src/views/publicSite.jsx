@@ -30,12 +30,14 @@ const PublicSite = ({ slug, template = 'modern', go }) => {
           setData({ t: DEMO_TENANT, projects: DEMO_PROJECTS, services: DEMO_SERVICES, features: DEMO_FEATURES, stats: DEMO_STATS, testimonials: DEMO_TESTIMONIALS, faqs: DEMO_FAQS });
           return;
         }
+        // Merge with DEMO_TENANT so null DB fields don't crash templates
+        const safeTenant = { ...DEMO_TENANT, ...tenant };
         const [projRes, svcRes, statsRes, testiRes, faqRes] = await Promise.all([
           sbGetProjects(tenant.id), sbGetServices(tenant.id), sbGetStats(tenant.id),
           sbGetTestimonials(tenant.id), sbGetFaqs(tenant.id),
         ]);
         setData({
-          t: tenant,
+          t: safeTenant,
           projects: projRes?.data?.length ? projRes.data : DEMO_PROJECTS,
           services: svcRes?.data?.length ? svcRes.data : DEMO_SERVICES,
           features: (svcRes?.data || []).filter(s => s.type === 'feature').length > 0 ? svcRes.data.filter(s => s.type === 'feature') : DEMO_FEATURES,

@@ -215,8 +215,22 @@ const MiniChart = () => {
 };
 
 // ── Info page ─────────────────────────────────────────────────
+const normalizeTenant = (src) => {
+  const base = { ...DEMO_TENANT, ...(src || {}) };
+  return {
+    ...base,
+    name_ar: base.name_ar || '', name_en: base.name_en || '', short_ar: base.short_ar || '',
+    about_ar: base.about_ar || '', about_en: base.about_en || '',
+    phone: base.phone || '', whatsapp: base.whatsapp || '', email: base.email || '',
+    address_ar: base.address_ar || '', maps_url: base.maps_url || '',
+    social: base.social || {}, video_url: base.video_url || '',
+    logo_url: base.logo_url || '', cover_url: base.cover_url || '',
+    whatsapp_note: base.whatsapp_note || '',
+  };
+};
+
 const TenantInfo = ({ tenant, setTenant }) => {
-  const [t, setT]   = useState({ ...(tenant || DEMO_TENANT) });
+  const [t, setT]   = useState(() => normalizeTenant(tenant));
   const [saving, setSaving] = useState(false);
   const [saved, setSaved]   = useState(false);
   const upd = (k, v) => setT(prev => ({ ...prev, [k]: v }));
@@ -252,7 +266,7 @@ const TenantInfo = ({ tenant, setTenant }) => {
         sub="هذه البيانات تظهر على موقعك مباشرة. اضغط حفظ بعد التعديل."
         action={
           <div style={{ display: 'flex', gap: 8 }}>
-            <Btn kind="secondary" icon="refresh" onClick={() => setT({ ...(tenant || DEMO_TENANT) })}>إلغاء</Btn>
+            <Btn kind="secondary" icon="refresh" onClick={() => setT(normalizeTenant(tenant))}>إلغاء</Btn>
             <Btn kind="primary" icon="check" onClick={save} disabled={saving}>{saving ? 'جاري الحفظ...' : 'حفظ التغييرات'}</Btn>
           </div>
         }

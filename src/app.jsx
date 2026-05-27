@@ -48,6 +48,7 @@ const App = () => {
 
     if (typeof sbOnAuthChange === 'function') {
     const { data: { subscription } } = sbOnAuthChange(async (event, session) => {
+      if (event === 'INITIAL_SESSION') return; // handled by sbGetSession above
       try {
         if (session?.user) {
           setUser(session.user);
@@ -60,7 +61,6 @@ const App = () => {
         }
       } catch (e) {
         console.error('Auth change error:', e);
-        setAuthReady(true);
       }
     });
 
