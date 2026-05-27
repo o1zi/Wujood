@@ -56,10 +56,8 @@ const PublicSite = ({ slug, template = 'modern', go }) => {
     return (
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', background: 'var(--bg)' }}>
         <div style={{ textAlign: 'center', color: 'var(--muted)' }}>
-          <div style={{ width: 30, height: 30, border: '2px solid var(--border)', borderTopColor: 'var(--primary)', borderRadius: '50%', margin: '0 auto 14px', animation: 'wjSpin 0.7s linear infinite' }} />
+          <div style={{ width: 30, height: 30, border: '2px solid var(--border)', borderTopColor: 'var(--primary)', borderRadius: '50%', margin: '0 auto 14px', animation: 'spin 0.7s linear infinite' }} />
           <div style={{ fontSize: 14 }}>جاري تحميل الموقع...</div>
-        </div>
-        <style>{`@keyframes wjSpin { to { transform: rotate(360deg); } }`}</style>
         </div>
       </div>
     );

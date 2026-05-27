@@ -1,9 +1,13 @@
 // Supabase client + data layer — Wujood Platform
 
 const ENV = window.__ENV__ || {};
-const SUPABASE_URL  = ENV.SUPABASE_URL  || '';
-const SUPABASE_ANON = ENV.SUPABASE_ANON || '';
-const SUPABASE_SVC  = ENV.SUPABASE_SVC  || '';
+const SUPABASE_URL  = ENV.SUPABASE_URL  || 'MISSING_SUPABASE_URL';
+const SUPABASE_ANON = ENV.SUPABASE_ANON || 'MISSING_SUPABASE_ANON';
+const SUPABASE_SVC  = ENV.SUPABASE_SVC  || SUPABASE_ANON;
+
+const { createClient } = window.supabase;
+
+if (!ENV.SUPABASE_URL) console.warn('⚠️ .env.js مفقود — تأكد من وجود ملف البيئة أو متغيرات Vercel');
 
 const { createClient } = window.supabase;
 
