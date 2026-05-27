@@ -82,6 +82,16 @@ const App = () => {
   );
 
   let view;
+
+  const hostname = window.location.hostname;
+  const isOfficeSubdomain = hostname !== 'wujood-plat.vercel.app' && hostname.endsWith('.wujood-plat.vercel.app');
+  const officeSlug = isOfficeSubdomain ? hostname.replace('.wujood-plat.vercel.app', '') : '';
+
+  if (isOfficeSubdomain && officeSlug && officeSlug !== 'www') {
+    view = <PublicSite slug={officeSlug} template="modern" go={go} />;
+    return (<>{view}</>);
+  }
+
   const isAdminEffective = isAdmin || sessionStorage.getItem('wujood_admin') === '1';
   if (route === '/' || route === '') {
     view = <Landing go={go} />;
