@@ -1331,11 +1331,22 @@ const TenantAnalytics = () => (
 const Tenant = ({ go, tenant, setTenant }) => {
   const [page, setPage] = useState('home');
 
+  const [retrying, setRetrying] = useState(false);
+  const retry = async () => {
+    setRetrying(true);
+    try {
+      const { data } = await sbGetMyTenant();
+      if (data) setTenant(data);
+    } catch(e) { console.error(e); }
+    setRetrying(false);
+  };
+
   if (!tenant) return (
     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh', flexDirection: 'column', gap: 16, background: 'var(--bg)' }}>
       <Logo size={32} />
       <h2 style={{ margin: 0, fontFamily: 'var(--font-display)', fontSize: 22 }}>لا يوجد مكتب مرتبط بحسابك</h2>
       <p style={{ color: 'var(--muted)', fontSize: 14, margin: 0 }}>تواصل مع مدير المنصة لتفعيل حسابك.</p>
+      <Btn kind="primary" icon="refresh" onClick={retry} disabled={retrying}>{retrying ? 'جاري المحاولة...' : 'إعادة المحاولة'}</Btn>
       <Btn kind="secondary" icon="whatsapp" onClick={() => window.open('https://wa.me/966500000000','_blank')}>تواصل عبر واتساب</Btn>
       <Btn kind="ghost" onClick={() => sbSignOut().then(() => go('#/'))}>تسجيل خروج</Btn>
     </div>

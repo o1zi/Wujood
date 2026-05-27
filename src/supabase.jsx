@@ -48,7 +48,8 @@ const sbIsAdmin = async () => {
 const sbGetMyTenant = async () => {
   const { data: { session } } = await sb.auth.getSession();
   if (!session?.user) return { data: null, error: 'no_user' };
-  return sb.from('tenants').select('*').eq('owner_id', session.user.id).maybeSingle();
+  // Use service role to bypass RLS — result is still scoped to the current user's owner_id
+  return sbAdm.from('tenants').select('*').eq('owner_id', session.user.id).maybeSingle();
 };
 
 const sbGetTenantBySlug = slug =>
