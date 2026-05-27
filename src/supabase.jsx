@@ -9,8 +9,6 @@ const _createClient = window.supabase.createClient;
 
 if (!ENV.SUPABASE_URL) console.warn('⚠️ .env.js مفقود — تأكد من وجود ملف البيئة أو متغيرات Vercel');
 
-const _createClient = window.supabase.createClient;
-
 // Main client — regular user sessions
 const sb = _createClient(SUPABASE_URL, SUPABASE_ANON, {
   auth: { persistSession: true, storageKey: 'wujood_session' },
