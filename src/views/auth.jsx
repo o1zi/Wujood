@@ -13,35 +13,49 @@ const Auth = ({ go }) => {
     setLoading(true);
     setError('');
 
-    let result;
+    let cancelled = false;
+    const safety = setTimeout(() => {
+      cancelled = true;
+      setLoading(false);
+      setError('انتهت مهلة الاتصال. حاول مرة أخرى.');
+    }, 10000);
+
     try {
-      result = await sbSignIn(email, password);
+      console.log('[Login] calling sbSignIn...');
+      const res = await sbSignIn(email, password);
+      console.log('[Login] sbSignIn result:', res?.error ? 'error' : 'ok');
+      clearTimeout(safety);
+      if (cancelled) return;
+
+      if (res?.error) {
+        setError('البريد الإلكتروني أو كلمة المرور غير صحيحة.');
+        setLoading(false);
+        return;
+      }
+
+      console.log('[Login] checking isAdmin...');
+      let admin = false;
+      try { admin = await sbIsAdmin(); } catch (err) { console.error('isAdmin err:', err); }
+      if (cancelled) return;
+
+      if (role === 'admin' && !admin) {
+        setError('هذا الحساب ليس أدمناً على المنصة.');
+        await sbSignOut();
+        setLoading(false);
+        return;
+      }
+
+      sessionStorage.setItem('wujood_admin', admin ? '1' : '0');
+      setLoading(false);
+      console.log('[Login] navigating to', admin ? '/admin' : '/dashboard');
+      go(admin ? '/admin' : '/dashboard');
     } catch (err) {
-      console.error('Login error:', err);
+      clearTimeout(safety);
+      if (cancelled) return;
+      console.error('[Login] error:', err);
       setError('حدث خطأ في الاتصال. حاول مرة أخرى.');
       setLoading(false);
-      return;
     }
-
-    if (result?.error) {
-      setError('البريد الإلكتروني أو كلمة المرور غير صحيحة.');
-      setLoading(false);
-      return;
-    }
-
-    let admin = false;
-    try { admin = await sbIsAdmin(); } catch (err) {}
-
-    if (role === 'admin' && !admin) {
-      setError('هذا الحساب ليس أدمناً على المنصة.');
-      await sbSignOut();
-      setLoading(false);
-      return;
-    }
-
-    sessionStorage.setItem('wujood_admin', admin ? '1' : '0');
-    setLoading(false);
-    go(admin ? '/admin' : '/dashboard');
   };
 
   return (
