@@ -47,7 +47,7 @@ const sbSignIn = (email, pw) => sb.auth.signInWithPassword({ email, password: pw
 const sbSignOut = () => sb.auth.signOut();
 const sbGetSession = async () => { const { data: { session } } = await sb.auth.getSession(); return session; };
 const sbOnAuthChange = cb => sb.auth.onAuthStateChange(cb);
-const sbIsAdmin = async () => { const { data } = await sb.from('admins').select('id').maybeSingle(); return !!data; };
+const sbIsAdmin = async () => { const { data } = await sb.rpc('is_admin'); return !!data; };
 
 // ── Tenant ────────────────────────────────────────────────────
 const sbGetMyTenant = async () => {
