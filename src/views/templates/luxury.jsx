@@ -2,8 +2,12 @@
 
 const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs }) => {
   const [filter, setFilter] = useState('all');
+  const [project, setProject] = useState(null);
+  const [faqOpen, setFaqOpen] = useState(null);
   const cats = ['all', ...new Set(projects.map(p => p.category))];
   const filtered = filter === 'all' ? projects : projects.filter(p => p.category === filter);
+
+  const wa = `https://wa.me/${t.whatsapp.replace(/\D/g, '')}`;
 
   return (
     <div style={{
@@ -15,22 +19,22 @@ const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs 
     }}>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Markazi+Text:wght@400;500;600;700&family=Montserrat:wght@300;400;500&display=swap" />
 
-      {/* Nav — luxury glass */}
+      {/* Nav */}
       <header style={{ position: 'fixed', top: 0, left: 0, right: 0, zIndex: 50, background: 'rgba(10,10,10,.4)', backdropFilter: 'blur(20px) saturate(180%)', borderBottom: '1px solid rgba(212,168,90,.15)' }}>
         <div style={{ maxWidth: 1340, margin: '0 auto', padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
             <span style={{ width: 1, height: 24, background: '#d4a85a' }}></span>
             <div>
-              <div style={{ fontFamily: "'Markazi Text', serif", fontSize: 22, fontWeight: 600, lineHeight: 1, color: '#f4ecd8' }}>الفارابي</div>
+              <div style={{ fontFamily: "'Markazi Text', serif", fontSize: 20, fontWeight: 600, lineHeight: 1, color: '#f4ecd8' }}>{t.name_ar}</div>
               <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 10, color: '#d4a85a', letterSpacing: '.3em', textTransform: 'uppercase', marginTop: 4 }}>EST. MMXI</div>
             </div>
           </div>
-          <nav style={{ display: 'flex', gap: 36, fontSize: 14, fontFamily: "'Montserrat', sans-serif", fontWeight: 400, letterSpacing: '.12em', textTransform: 'uppercase' }} className="lx-nav">
-            {[['الرئيسية', 'Home'], ['الفلسفة', 'Story'], ['الأعمال', 'Works'], ['تواصل', 'Contact']].map(([ar, en]) => (
-              <a key={en} href="#" style={{ color: 'rgba(244,236,216,.7)', fontSize: 11 }}>{en}</a>
+          <nav style={{ display: 'flex', gap: 36, fontSize: 11, fontFamily: "'Montserrat', sans-serif", fontWeight: 400, letterSpacing: '.12em', textTransform: 'uppercase' }} className="lx-nav">
+            {[['Home', '#'], ['Story', '#about'], ['Works', '#projects'], ['Services', '#services'], ['Contact', '#contact']].map(([en, h]) => (
+              <a key={en} href={h} style={{ color: 'rgba(244,236,216,.7)' }}>{en}</a>
             ))}
           </nav>
-          <a href={`https://wa.me/${t.whatsapp.replace(/\D/g, '')}`} target="_blank" style={{ padding: '11px 22px', border: '1px solid #d4a85a', color: '#d4a85a', fontFamily: "'Montserrat', sans-serif", fontSize: 11, letterSpacing: '.15em', textTransform: 'uppercase' }}>Inquire</a>
+          <a href={wa} target="_blank" style={{ padding: '11px 22px', border: '1px solid #d4a85a', color: '#d4a85a', fontFamily: "'Montserrat', sans-serif", fontSize: 11, letterSpacing: '.15em', textTransform: 'uppercase' }}>Inquire</a>
         </div>
       </header>
 
@@ -90,7 +94,7 @@ const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs 
       </section>
 
       {/* About */}
-      <section style={{ padding: '160px 40px 120px' }}>
+      <section id="about" style={{ padding: '160px 40px 120px' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1.4fr', gap: 80, alignItems: 'center' }} className="lx-about">
           <div style={{ position: 'relative' }}>
             <div style={{ position: 'absolute', insetInlineStart: -16, top: -16, right: 30, bottom: 30, border: '1px solid #d4a85a' }}></div>
@@ -114,7 +118,7 @@ const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs 
       </section>
 
       {/* Services */}
-      <section style={{ padding: '120px 40px', background: '#0e0c08', borderTop: '1px solid rgba(212,168,90,.1)', borderBottom: '1px solid rgba(212,168,90,.1)' }}>
+      <section id="services" style={{ padding: '120px 40px', background: '#0e0c08', borderTop: '1px solid rgba(212,168,90,.1)', borderBottom: '1px solid rgba(212,168,90,.1)' }}>
         <div style={{ maxWidth: 1200, margin: '0 auto' }}>
           <div style={{ textAlign: 'center', marginBottom: 80 }}>
             <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, letterSpacing: '.4em', textTransform: 'uppercase', color: '#d4a85a' }}>— Services</span>
@@ -126,10 +130,9 @@ const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs 
                 padding: 40,
                 background: 'rgba(244,236,216,.03)',
                 border: '1px solid rgba(212,168,90,.15)',
-                position: 'relative',
               }}>
                 <div style={{ display: 'flex', alignItems: 'baseline', gap: 18, marginBottom: 22 }}>
-                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 38, color: '#d4a85a' }}>{['Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ'][i]}</span>
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 38, color: '#d4a85a' }}>{['Ⅰ', 'Ⅱ', 'Ⅲ', 'Ⅳ'][i] || (i + 1)}</span>
                   <span style={{ flex: 1, height: 1, background: 'rgba(212,168,90,.2)' }}></span>
                 </div>
                 <h3 style={{ margin: '0 0 14px', fontFamily: "'Markazi Text', serif", fontSize: 26, fontWeight: 600 }}>{s.title}</h3>
@@ -140,7 +143,7 @@ const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs 
         </div>
       </section>
 
-      {/* Projects — featured one big, rest grid */}
+      {/* Projects */}
       <section id="projects" style={{ padding: '160px 40px 120px' }}>
         <div style={{ maxWidth: 1340, margin: '0 auto' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 60, flexWrap: 'wrap', gap: 20 }}>
@@ -160,7 +163,7 @@ const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs 
           </div>
 
           {filtered[0] && (
-            <div style={{ marginBottom: 40, position: 'relative' }}>
+            <div style={{ marginBottom: 40, position: 'relative', cursor: 'pointer' }} onClick={() => setProject(filtered[0])}>
               <ProjectCover seed={filtered[0].cover_seed} h={520} radius={0} />
               <div style={{ position: 'absolute', bottom: 30, insetInlineStart: 30, background: 'rgba(10,10,10,.85)', backdropFilter: 'blur(12px)', padding: '24px 30px', border: '1px solid rgba(212,168,90,.3)', maxWidth: 460 }}>
                 <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: '.3em', textTransform: 'uppercase', color: '#d4a85a', marginBottom: 10 }}>Featured · {filtered[0].year}</div>
@@ -171,7 +174,7 @@ const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs 
           )}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 22 }} className="lx-proj-grid">
             {filtered.slice(1, 7).map(p => (
-              <div key={p.id} style={{ position: 'relative', cursor: 'pointer' }}>
+              <div key={p.id} style={{ cursor: 'pointer' }} onClick={() => setProject(p)}>
                 <ProjectCover seed={p.cover_seed} h={260} radius={0} />
                 <div style={{ padding: '16px 0' }}>
                   <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: '.25em', textTransform: 'uppercase', color: '#d4a85a' }}>{p.category} — {p.year}</div>
@@ -186,12 +189,38 @@ const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs 
       {/* Testimonial */}
       <section style={{ padding: '120px 40px', background: 'linear-gradient(180deg, transparent, rgba(212,168,90,.04), transparent)' }}>
         <div style={{ maxWidth: 880, margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 80, color: '#d4a85a', lineHeight: .5, marginBottom: 24 }}>“</div>
+          <div style={{ fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 80, color: '#d4a85a', lineHeight: .5, marginBottom: 24 }}>"</div>
           <p style={{ margin: 0, fontFamily: "'Cormorant Garamond', serif", fontStyle: 'italic', fontSize: 'clamp(22px, 2.8vw, 32px)', lineHeight: 1.55, color: 'rgba(244,236,216,.9)' }}>
             {testimonials[0]?.text || ''}
           </p>
           <div style={{ marginTop: 40, fontFamily: "'Montserrat', sans-serif", fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', color: '#d4a85a' }}>— {testimonials[0]?.name || ''}</div>
           <div style={{ fontFamily: "'Markazi Text', serif", fontSize: 14, color: 'rgba(244,236,216,.5)', marginTop: 6 }}>{testimonials[0]?.role || ''}</div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ padding: '100px 40px', background: '#0e0c08', borderTop: '1px solid rgba(212,168,90,.1)' }}>
+        <div style={{ maxWidth: 900, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 70 }}>
+            <span style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 11, letterSpacing: '.4em', textTransform: 'uppercase', color: '#d4a85a' }}>— FAQ</span>
+            <h2 style={{ margin: '20px 0 0', fontFamily: "'Markazi Text', serif", fontSize: 'clamp(34px, 4vw, 52px)', fontWeight: 500 }}>أسئلة شائعة.</h2>
+          </div>
+          <div>
+            {faqs.map(q => (
+              <div key={q.id} style={{ borderBottom: '1px solid rgba(212,168,90,.12)' }}>
+                <button
+                  onClick={() => setFaqOpen(faqOpen === q.id ? null : q.id)}
+                  style={{ width: '100%', textAlign: 'right', padding: '22px 0', display: 'flex', alignItems: 'center', gap: 14, fontFamily: "'Markazi Text', serif", fontSize: 18, fontWeight: 500, color: '#f4ecd8' }}
+                >
+                  <span style={{ flex: 1 }}>{q.q}</span>
+                  <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 22, color: '#d4a85a', transform: faqOpen === q.id ? 'rotate(45deg)' : 'none', transition: '.2s', display: 'inline-block' }}>+</span>
+                </button>
+                {faqOpen === q.id && (
+                  <div style={{ paddingBottom: 22, fontSize: 16, lineHeight: 1.85, color: 'rgba(244,236,216,.65)', fontFamily: "'Markazi Text', serif" }}>{q.a}</div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -206,7 +235,7 @@ const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs 
             <em style={{ fontFamily: "'Cormorant Garamond', serif", color: '#d4a85a' }}>يستحق الأناقة.</em>
           </h2>
           <div style={{ marginTop: 36, display: 'flex', gap: 14, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href={`https://wa.me/${t.whatsapp.replace(/\D/g, '')}`} target="_blank" style={{ padding: '14px 32px', background: '#d4a85a', color: '#0a0a0a', fontFamily: "'Montserrat', sans-serif", fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', fontWeight: 600 }}>WhatsApp Inquiry</a>
+            <a href={wa} target="_blank" style={{ padding: '14px 32px', background: '#d4a85a', color: '#0a0a0a', fontFamily: "'Montserrat', sans-serif", fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', fontWeight: 600 }}>WhatsApp Inquiry</a>
             <a href={`tel:${t.phone.replace(/\s/g, '')}`} style={{ padding: '14px 32px', border: '1px solid rgba(212,168,90,.4)', color: '#f4ecd8', fontFamily: "'Montserrat', sans-serif", fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase' }}>{t.phone}</a>
           </div>
         </div>
@@ -215,11 +244,44 @@ const TplLuxury = ({ t, projects, services, features, stats, testimonials, faqs 
       {/* Footer */}
       <footer style={{ padding: '50px 40px', borderTop: '1px solid rgba(212,168,90,.1)' }}>
         <div style={{ maxWidth: 1340, margin: '0 auto', textAlign: 'center' }}>
-          <div style={{ fontFamily: "'Markazi Text', serif", fontSize: 28, fontWeight: 600, color: '#f4ecd8' }}>الفارابي</div>
+          <div style={{ fontFamily: "'Markazi Text', serif", fontSize: 26, fontWeight: 600, color: '#f4ecd8' }}>{t.name_ar}</div>
           <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: 11, color: '#d4a85a', letterSpacing: '.4em', textTransform: 'uppercase', marginTop: 6 }}>EST. MMXI · MAINTAINED BY HAND</div>
-          <div style={{ marginTop: 24, fontSize: 12, color: 'rgba(244,236,216,.4)', letterSpacing: '.05em' }}>© MMXXVI Al-Farabi Architectural Studio</div>
+          <div style={{ marginTop: 24, fontSize: 12, color: 'rgba(244,236,216,.4)', letterSpacing: '.05em' }}>© MMXXVI · {t.name_ar}</div>
+          <a href="/" style={{ display: 'block', marginTop: 10, fontSize: 11, color: '#d4a85a', opacity: .5 }}>مدعوم بواسطة وجود</a>
         </div>
       </footer>
+
+      {/* Floating WhatsApp */}
+      <a href={wa} target="_blank" style={{
+        position: 'fixed', bottom: 24, insetInlineStart: 24,
+        width: 52, height: 52, borderRadius: '50%',
+        background: '#25D366', color: '#fff',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 6px 20px rgba(37,211,102,.4)', zIndex: 40,
+      }}>
+        {React.createElement(Icons.whatsapp, { size: 24 })}
+      </a>
+
+      {/* Project Modal */}
+      {project && (
+        <div onClick={() => setProject(null)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(0,0,0,.75)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#0e0c08', border: '1px solid rgba(212,168,90,.2)', maxWidth: 900, width: '100%', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ position: 'relative' }}>
+              <ProjectCover seed={project.cover_seed} h={420} radius={0} />
+              <button onClick={() => setProject(null)} style={{ position: 'absolute', top: 14, insetInlineEnd: 14, width: 36, height: 36, background: 'rgba(0,0,0,.6)', color: '#d4a85a', border: '1px solid rgba(212,168,90,.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>×</button>
+            </div>
+            <div style={{ padding: '32px 40px' }}>
+              <div style={{ fontFamily: "'Montserrat', sans-serif", fontSize: 10, letterSpacing: '.3em', textTransform: 'uppercase', color: '#d4a85a', marginBottom: 14 }}>{project.category} · {project.year}</div>
+              <h2 style={{ margin: '0 0 10px', fontFamily: "'Markazi Text', serif", fontSize: 30, fontWeight: 600, color: '#f4ecd8' }}>{project.title_ar}</h2>
+              <div style={{ fontSize: 14, color: 'rgba(244,236,216,.6)', marginBottom: 20, fontFamily: "'Markazi Text', serif" }}>{project.location}{project.area ? ` · ${project.area} م²` : ''}</div>
+              <p style={{ margin: '0 0 28px', fontSize: 16, lineHeight: 1.85, color: 'rgba(244,236,216,.7)', fontFamily: "'Markazi Text', serif" }}>
+                مشروع يجمع بين الأناقة الراقية والتنفيذ الاستثنائي. صُمّم بأدق التفاصيل وفق أعلى معايير الفخامة المعمارية.
+              </p>
+              <a href={wa} target="_blank" style={{ display: 'inline-block', padding: '13px 28px', background: '#d4a85a', color: '#0a0a0a', fontFamily: "'Montserrat', sans-serif", fontSize: 12, letterSpacing: '.2em', textTransform: 'uppercase', fontWeight: 600 }}>Begin Inquiry</a>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @media (max-width: 980px) {

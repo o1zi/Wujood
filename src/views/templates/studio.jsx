@@ -2,8 +2,12 @@
 
 const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs }) => {
   const [filter, setFilter] = useState('all');
+  const [project, setProject] = useState(null);
+  const [faqOpen, setFaqOpen] = useState(null);
   const cats = ['all', ...new Set(projects.map(p => p.category))];
   const filtered = filter === 'all' ? projects : projects.filter(p => p.category === filter);
+
+  const wa = `https://wa.me/${t.whatsapp.replace(/\D/g, '')}`;
 
   return (
     <div style={{
@@ -19,21 +23,23 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
       <header style={{ position: 'sticky', top: 0, zIndex: 50, background: 'rgba(250,250,246,.92)', backdropFilter: 'blur(14px)', borderBottom: '1px solid rgba(26,26,28,.08)' }}>
         <div style={{ maxWidth: 1340, margin: '0 auto', padding: '20px 40px', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <a href="#" style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ width: 36, height: 36, background: '#1a1a1c', color: '#fafaf6', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Reem Kufi', sans-serif", fontWeight: 700, fontSize: 16 }}>F</span>
+            <span style={{ width: 36, height: 36, background: '#1a1a1c', color: '#fafaf6', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', fontFamily: "'Reem Kufi', sans-serif", fontWeight: 700, fontSize: 16 }}>
+              {(t.name_ar || 'م').charAt(t.name_ar?.startsWith('مكتب') ? 5 : 0)}
+            </span>
             <div>
-              <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 17, fontWeight: 600, lineHeight: 1 }}>الفارابي</div>
+              <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 17, fontWeight: 600, lineHeight: 1 }}>{t.name_ar}</div>
               <div style={{ fontSize: 10, color: '#7a8c6f', letterSpacing: '.15em', textTransform: 'uppercase', fontWeight: 600, marginTop: 3 }}>Architecture Studio</div>
             </div>
           </a>
           <nav style={{ display: 'flex', gap: 28, fontSize: 14, fontWeight: 500 }} className="std-nav">
-            {[['أعمال', '01'], ['خدمات', '02'], ['عن المكتب', '03'], ['تواصل', '04']].map(([ar, num]) => (
-              <a key={num} href="#" style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6, color: '#1a1a1c' }}>
+            {[['أعمال', '#projects', '01'], ['خدمات', '#services', '02'], ['عن المكتب', '#about', '03'], ['تواصل', '#contact', '04']].map(([ar, h, num]) => (
+              <a key={num} href={h} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6, color: '#1a1a1c' }}>
                 <span style={{ fontSize: 10, color: '#7a8c6f', fontFamily: "'Reem Kufi', sans-serif" }}>{num}</span>
                 {ar}
               </a>
             ))}
           </nav>
-          <a href={`https://wa.me/${t.whatsapp.replace(/\D/g, '')}`} target="_blank" style={{
+          <a href={wa} target="_blank" style={{
             padding: '10px 22px', background: '#1a1a1c', color: '#fafaf6',
             fontSize: 13, fontWeight: 500,
             display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -44,15 +50,15 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
         </div>
       </header>
 
-      {/* Hero — image left, text right */}
+      {/* Hero */}
       <section style={{ padding: '40px 40px 80px', minHeight: 'calc(100vh - 80px)', display: 'flex', flexDirection: 'column' }}>
         <div style={{ maxWidth: 1340, margin: '0 auto', display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 50, flex: 1, alignItems: 'stretch' }} className="std-hero">
           <div style={{ position: 'relative', minHeight: 540 }}>
             <ProjectCover seed={1} h={'100%'} radius={2} />
             <div style={{ position: 'absolute', bottom: 24, insetInlineStart: 24, background: 'rgba(26,26,28,.85)', backdropFilter: 'blur(8px)', padding: '14px 18px', color: '#fafaf6', maxWidth: 280 }}>
               <div style={{ fontSize: 10, color: '#bccdaf', letterSpacing: '.2em', textTransform: 'uppercase', fontWeight: 600, marginBottom: 6 }}>Featured · 2024</div>
-              <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 16, fontWeight: 600 }}>مجمع الواحة السكني</div>
-              <div style={{ fontSize: 12, color: 'rgba(250,250,246,.6)', marginTop: 4 }}>الرياض — حي الياسمين</div>
+              <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 16, fontWeight: 600 }}>{projects[0]?.title_ar || 'مجمع الواحة السكني'}</div>
+              <div style={{ fontSize: 12, color: 'rgba(250,250,246,.6)', marginTop: 4 }}>{projects[0]?.location || 'الرياض'}</div>
             </div>
           </div>
           <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', paddingTop: 30 }}>
@@ -91,7 +97,7 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
         </div>
       </section>
 
-      {/* Stats — big numbers row */}
+      {/* Stats */}
       <section style={{ padding: '40px 40px', borderTop: '1px solid rgba(26,26,28,.08)', borderBottom: '1px solid rgba(26,26,28,.08)' }}>
         <div style={{ maxWidth: 1340, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 30 }} className="std-stats">
           {stats.map((s, i) => (
@@ -103,8 +109,24 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
         </div>
       </section>
 
-      {/* Services — numbered list, no boxes */}
-      <section style={{ padding: '120px 40px' }}>
+      {/* About */}
+      <section id="about" style={{ padding: '100px 40px', background: '#f0f0ea' }}>
+        <div style={{ maxWidth: 1340, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 80, alignItems: 'center' }} className="std-about">
+          <div>
+            <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 11, letterSpacing: '.2em', textTransform: 'uppercase', color: '#7a8c6f', fontWeight: 600, marginBottom: 16 }}>03 · عن المكتب</div>
+            <h2 style={{ margin: '0 0 24px', fontFamily: "'Reem Kufi', sans-serif", fontSize: 'clamp(32px, 4vw, 52px)', fontWeight: 600, letterSpacing: '-0.025em', lineHeight: 1.1 }}>
+              نُؤمن أن<br/><span style={{ color: '#7a8c6f' }}>التصميم الحقيقي</span><br/>يبدأ من الناس.
+            </h2>
+            <p style={{ margin: 0, fontSize: 16, lineHeight: 1.8, color: '#4a4a4c' }}>{t.about_ar}</p>
+          </div>
+          <div>
+            <ProjectCover seed={3} h={480} radius={2} />
+          </div>
+        </div>
+      </section>
+
+      {/* Services */}
+      <section id="services" style={{ padding: '120px 40px' }}>
         <div style={{ maxWidth: 1340, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 60, marginBottom: 50 }} className="std-srv-head">
             <div>
@@ -130,12 +152,12 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
         </div>
       </section>
 
-      {/* Projects — asymmetric, full bleed */}
+      {/* Projects */}
       <section id="projects" style={{ padding: '40px 0 120px' }}>
         <div style={{ maxWidth: 1340, margin: '0 auto', padding: '0 40px' }}>
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 50, flexWrap: 'wrap', gap: 20 }}>
             <div>
-              <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 11, letterSpacing: '.2em', textTransform: 'uppercase', color: '#7a8c6f', fontWeight: 600, marginBottom: 14 }}>03 · أعمال مختارة</div>
+              <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 11, letterSpacing: '.2em', textTransform: 'uppercase', color: '#7a8c6f', fontWeight: 600, marginBottom: 14 }}>01 · أعمال مختارة</div>
               <h2 style={{ margin: 0, fontFamily: "'Reem Kufi', sans-serif", fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 600, letterSpacing: '-0.025em' }}>
                 المشاريع.
               </h2>
@@ -162,10 +184,10 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
                 display: 'grid',
                 gridTemplateColumns: reversed ? '1fr 1.6fr' : '1.6fr 1fr',
                 gap: 40, alignItems: 'center',
-                paddingInline: reversed ? '0 0 0 40px' : '40px 0 0',
                 maxWidth: 1280, margin: '0 auto', width: '100%',
+                padding: '0 40px',
               }} className="std-proj-row">
-                <div style={{ order: reversed ? 2 : 1 }}>
+                <div style={{ order: reversed ? 2 : 1, cursor: 'pointer' }} onClick={() => setProject(p)}>
                   <ProjectCover seed={p.cover_seed} h={520} radius={2} />
                 </div>
                 <div style={{ order: reversed ? 1 : 2, padding: reversed ? '0 20px 0 0' : '0 0 0 20px' }}>
@@ -179,9 +201,9 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
                   <p style={{ margin: 0, fontSize: 15, lineHeight: 1.75, color: '#4a4a4c', maxWidth: 420 }}>
                     {p.location}. مشروع يجمع بين الجمال الوظيفي والاستدامة، مع احترام تام لطبيعة الموقع.
                   </p>
-                  <a href="#" style={{ marginTop: 22, display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, color: '#1a1a1c', borderBottom: '1px solid #1a1a1c', paddingBottom: 4 }}>
+                  <button onClick={() => setProject(p)} style={{ marginTop: 22, display: 'inline-flex', alignItems: 'center', gap: 6, fontSize: 13, fontWeight: 500, color: '#1a1a1c', borderBottom: '1px solid #1a1a1c', paddingBottom: 4, background: 'transparent' }}>
                     اقرأ المزيد {React.createElement(Icons.arrowLeft, { size: 14 })}
-                  </a>
+                  </button>
                 </div>
               </div>
             );
@@ -189,12 +211,12 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
         </div>
       </section>
 
-      {/* Testimonial — pull quote */}
+      {/* Testimonial */}
       <section style={{ padding: '120px 40px', background: '#1a1a1c', color: '#fafaf6' }}>
         <div style={{ maxWidth: 1100, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 2fr', gap: 50, alignItems: 'center' }} className="std-testi">
           <div>
             <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 11, letterSpacing: '.2em', textTransform: 'uppercase', color: '#bccdaf', fontWeight: 600, marginBottom: 14 }}>04 · شهادة</div>
-            <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 80, fontWeight: 600, color: '#7a8c6f', lineHeight: .9 }}>“</div>
+            <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 80, fontWeight: 600, color: '#7a8c6f', lineHeight: .9 }}>"</div>
           </div>
           <div>
             <p style={{ margin: 0, fontFamily: "'Reem Kufi', sans-serif", fontSize: 'clamp(22px, 3vw, 36px)', lineHeight: 1.4, fontWeight: 400, letterSpacing: '-0.015em' }}>
@@ -211,12 +233,43 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
         </div>
       </section>
 
+      {/* FAQ */}
+      <section style={{ padding: '100px 40px', background: '#f0f0ea' }}>
+        <div style={{ maxWidth: 1100, margin: '0 auto' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 60 }}>
+            <div>
+              <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 11, letterSpacing: '.2em', textTransform: 'uppercase', color: '#7a8c6f', fontWeight: 600, marginBottom: 14 }}>05 · أسئلة</div>
+              <h2 style={{ margin: 0, fontFamily: "'Reem Kufi', sans-serif", fontSize: 'clamp(36px, 5vw, 64px)', fontWeight: 600, letterSpacing: '-0.025em' }}>
+                شائعة.
+              </h2>
+            </div>
+          </div>
+          <div>
+            {faqs.map(q => (
+              <div key={q.id} style={{ borderTop: '1px solid rgba(26,26,28,.12)' }}>
+                <button
+                  onClick={() => setFaqOpen(faqOpen === q.id ? null : q.id)}
+                  style={{ width: '100%', textAlign: 'right', padding: '24px 0', display: 'flex', alignItems: 'center', gap: 14, fontFamily: "'Reem Kufi', sans-serif", fontSize: 18, fontWeight: 500, color: '#1a1a1c' }}
+                >
+                  <span style={{ flex: 1 }}>{q.q}</span>
+                  <span style={{ fontSize: 22, color: '#7a8c6f', transform: faqOpen === q.id ? 'rotate(45deg)' : 'none', transition: '.2s', display: 'inline-block' }}>+</span>
+                </button>
+                {faqOpen === q.id && (
+                  <div style={{ paddingBottom: 22, fontSize: 15, lineHeight: 1.8, color: '#4a4a4c' }}>{q.a}</div>
+                )}
+              </div>
+            ))}
+            <div style={{ borderTop: '1px solid rgba(26,26,28,.12)' }}></div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section id="contact" style={{ padding: '120px 40px' }}>
         <div style={{ maxWidth: 1340, margin: '0 auto' }}>
           <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', gap: 60 }} className="std-cta">
             <div>
-              <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 11, letterSpacing: '.2em', textTransform: 'uppercase', color: '#7a8c6f', fontWeight: 600, marginBottom: 14 }}>05 · تواصل</div>
+              <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 11, letterSpacing: '.2em', textTransform: 'uppercase', color: '#7a8c6f', fontWeight: 600, marginBottom: 14 }}>06 · تواصل</div>
               <h2 style={{ margin: 0, fontFamily: "'Reem Kufi', sans-serif", fontSize: 'clamp(44px, 7vw, 96px)', fontWeight: 600, letterSpacing: '-0.03em', lineHeight: .95 }}>
                 لنبدأ
                 <br/>
@@ -224,7 +277,7 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
               </h2>
             </div>
             <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'flex-end', gap: 16 }}>
-              <ContactRow label="واتساب" value={t.whatsapp} href={`https://wa.me/${t.whatsapp.replace(/\D/g, '')}`} />
+              <ContactRow label="واتساب" value={t.whatsapp} href={wa} />
               <ContactRow label="هاتف" value={t.phone} href={`tel:${t.phone.replace(/\s/g, '')}`} />
               <ContactRow label="بريد" value={t.email} href={`mailto:${t.email}`} />
               <ContactRow label="موقع" value={t.address_ar} href="#" />
@@ -236,18 +289,53 @@ const TplStudio = ({ t, projects, services, features, stats, testimonials, faqs 
       {/* Footer */}
       <footer style={{ padding: '40px', borderTop: '1px solid rgba(26,26,28,.08)' }}>
         <div style={{ maxWidth: 1340, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 14, fontSize: 12, color: '#6a6a6c' }}>
-          <span>© 2026 الفارابي — استوديو هندسة معمارية</span>
+          <span>© 2026 {t.name_ar} — استوديو هندسة معمارية</span>
           <span style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
             <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#7a8c6f' }}></span>
             متاحون لمشاريع 2026
           </span>
+          <a href="/" style={{ color: '#7a8c6f', opacity: .7 }}>مدعوم بواسطة وجود</a>
         </div>
       </footer>
+
+      {/* Floating WhatsApp */}
+      <a href={wa} target="_blank" style={{
+        position: 'fixed', bottom: 24, insetInlineStart: 24,
+        width: 52, height: 52, borderRadius: '50%',
+        background: '#25D366', color: '#fff',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 6px 20px rgba(37,211,102,.4)', zIndex: 40,
+      }}>
+        {React.createElement(Icons.whatsapp, { size: 24 })}
+      </a>
+
+      {/* Project Modal */}
+      {project && (
+        <div onClick={() => setProject(null)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(26,26,28,.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#fafaf6', maxWidth: 900, width: '100%', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ position: 'relative' }}>
+              <ProjectCover seed={project.cover_seed} h={420} radius={0} />
+              <button onClick={() => setProject(null)} style={{ position: 'absolute', top: 14, insetInlineEnd: 14, width: 36, height: 36, background: 'rgba(26,26,28,.8)', color: '#fafaf6', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>×</button>
+            </div>
+            <div style={{ padding: '32px 40px' }}>
+              <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 11, letterSpacing: '.2em', textTransform: 'uppercase', color: '#7a8c6f', fontWeight: 600, marginBottom: 14 }}>{project.category} · {project.year}</div>
+              <h2 style={{ margin: '0 0 10px', fontFamily: "'Reem Kufi', sans-serif", fontSize: 28, fontWeight: 600, letterSpacing: '-0.02em' }}>{project.title_ar}</h2>
+              <div style={{ fontSize: 14, color: '#6a6a6c', marginBottom: 20 }}>{project.location}{project.area ? ` · ${project.area} م²` : ''}</div>
+              <p style={{ margin: '0 0 28px', fontSize: 16, lineHeight: 1.8, color: '#4a4a4c' }}>
+                مشروع يجمع بين الجمال الوظيفي والاستدامة. صُمّم بعناية مع احترام تام لطبيعة الموقع وثقافة المستخدمين.
+              </p>
+              <a href={wa} target="_blank" style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '12px 24px', background: '#1a1a1c', color: '#fafaf6', fontSize: 13, fontWeight: 500 }}>
+                {React.createElement(Icons.whatsapp, { size: 16 })} استفسر عن المشروع
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @media (max-width: 980px) {
           .std-nav { display: none !important; }
-          .std-hero, .std-stats, .std-srv-head, .std-proj-row, .std-testi, .std-cta { grid-template-columns: 1fr !important; }
+          .std-hero, .std-stats, .std-srv-head, .std-proj-row, .std-testi, .std-cta, .std-about { grid-template-columns: 1fr !important; }
           .std-srv-row { grid-template-columns: 40px 1fr !important; }
           .std-srv-row > p, .std-srv-row > span:last-child { display: none; }
         }

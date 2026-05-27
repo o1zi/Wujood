@@ -2,8 +2,12 @@
 
 const TplHeritage = ({ t, projects, services, features, stats, testimonials, faqs }) => {
   const [filter, setFilter] = useState('all');
+  const [project, setProject] = useState(null);
+  const [faqOpen, setFaqOpen] = useState(null);
   const cats = ['all', ...new Set(projects.map(p => p.category))];
   const filtered = filter === 'all' ? projects : projects.filter(p => p.category === filter);
+
+  const wa = `https://wa.me/${t.whatsapp.replace(/\D/g, '')}`;
 
   // Star pattern SVG
   const star = encodeURIComponent(`<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'><g fill='none' stroke='#b85c3d' stroke-width='.6' opacity='.18'><path d='M30 4l6 14 14 2-10 10 3 14L30 38l-13 6 3-14-10-10 14-2z'/><circle cx='30' cy='30' r='28'/></g></svg>`);
@@ -29,18 +33,18 @@ const TplHeritage = ({ t, projects, services, features, stats, testimonials, faq
               background: '#b85c3d',
               display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
               color: '#f4e9d4', fontFamily: "'Amiri', serif", fontSize: 24, fontWeight: 700,
-            }}>ف</span>
+            }}>{(t.name_ar || 'م').charAt(t.name_ar?.startsWith('مكتب') ? 5 : 0)}</span>
             <div>
-              <div style={{ fontFamily: "'Amiri', serif", fontSize: 24, fontWeight: 700, lineHeight: 1, color: '#3a2a1c' }}>الفارابي</div>
+              <div style={{ fontFamily: "'Amiri', serif", fontSize: 22, fontWeight: 700, lineHeight: 1, color: '#3a2a1c' }}>{t.name_ar}</div>
               <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 10, color: '#b85c3d', letterSpacing: '.18em', textTransform: 'uppercase', marginTop: 4 }}>للاستشارات الهندسية · 1432هـ</div>
             </div>
           </div>
           <nav style={{ display: 'flex', gap: 30, fontSize: 16, fontFamily: "'Markazi Text', serif", fontWeight: 500 }} className="hrt-nav">
-            {['الرئيسية', 'من نحن', 'أعمالنا', 'خدماتنا', 'تواصل'].map(x => (
-              <a key={x} href="#" style={{ color: '#3a2a1c', paddingBottom: 4 }}>{x}</a>
+            {[['الرئيسية', '#'], ['من نحن', '#about'], ['أعمالنا', '#projects'], ['خدماتنا', '#services'], ['تواصل', '#contact']].map(([x, h]) => (
+              <a key={x} href={h} style={{ color: '#3a2a1c', paddingBottom: 4 }}>{x}</a>
             ))}
           </nav>
-          <a href={`https://wa.me/${t.whatsapp.replace(/\D/g, '')}`} target="_blank" style={{
+          <a href={wa} target="_blank" style={{
             padding: '11px 24px',
             borderRadius: '999px',
             background: '#b85c3d', color: '#f4e9d4',
@@ -51,7 +55,7 @@ const TplHeritage = ({ t, projects, services, features, stats, testimonials, faq
         <div style={{ height: 8, background: pattern, backgroundSize: '40px 40px', borderTop: '1px solid #d4c19a' }}></div>
       </header>
 
-      {/* Hero — split with arch frame */}
+      {/* Hero */}
       <section style={{ padding: '70px 36px 90px', background: '#f4e9d4', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: pattern, backgroundSize: '120px 120px', opacity: .4, pointerEvents: 'none' }}></div>
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 60, alignItems: 'center', position: 'relative' }} className="hrt-hero">
@@ -93,7 +97,6 @@ const TplHeritage = ({ t, projects, services, features, stats, testimonials, faq
             }}>
               <ProjectCover seed={1} h={540} radius={0} />
             </div>
-            {/* Floating year badge */}
             <div style={{
               position: 'absolute', bottom: 28, insetInlineStart: -20,
               background: '#f4e9d4', border: '1px solid #b85c3d',
@@ -121,7 +124,7 @@ const TplHeritage = ({ t, projects, services, features, stats, testimonials, faq
       </section>
 
       {/* About */}
-      <section style={{ padding: '110px 36px', background: '#f4e9d4', position: 'relative' }}>
+      <section id="about" style={{ padding: '110px 36px', background: '#f4e9d4', position: 'relative' }}>
         <div style={{ maxWidth: 900, margin: '0 auto', textAlign: 'center' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12, justifyContent: 'center', marginBottom: 22 }}>
             <span style={{ height: 1, width: 50, background: '#b85c3d' }}></span>
@@ -141,8 +144,8 @@ const TplHeritage = ({ t, projects, services, features, stats, testimonials, faq
         </div>
       </section>
 
-      {/* Services — arched cards */}
-      <section style={{ padding: '90px 36px', background: '#e3d3b5', position: 'relative', overflow: 'hidden' }}>
+      {/* Services */}
+      <section id="services" style={{ padding: '90px 36px', background: '#e3d3b5', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: pattern, backgroundSize: '100px 100px', opacity: .35, pointerEvents: 'none' }}></div>
         <div style={{ maxWidth: 1280, margin: '0 auto', position: 'relative' }}>
           <div style={{ textAlign: 'center', marginBottom: 56 }}>
@@ -157,7 +160,6 @@ const TplHeritage = ({ t, projects, services, features, stats, testimonials, faq
                 borderRadius: '12px 12px 50% 50% / 12px 12px 8% 8%',
                 border: '1px solid #d4c19a',
                 textAlign: 'center',
-                position: 'relative',
               }}>
                 <div style={{
                   width: 60, height: 60,
@@ -199,7 +201,7 @@ const TplHeritage = ({ t, projects, services, features, stats, testimonials, faq
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 22 }} className="hrt-proj">
             {filtered.slice(0, 6).map(p => (
-              <div key={p.id} style={{ background: '#fff', border: '1px solid #d4c19a', borderRadius: 12, overflow: 'hidden', boxShadow: '0 4px 16px -8px rgba(58,42,28,.2)' }}>
+              <div key={p.id} onClick={() => setProject(p)} style={{ background: '#fff', border: '1px solid #d4c19a', borderRadius: 12, overflow: 'hidden', boxShadow: '0 4px 16px -8px rgba(58,42,28,.2)', cursor: 'pointer' }}>
                 <div style={{ position: 'relative' }}>
                   <ProjectCover seed={p.cover_seed} h={240} radius={0} />
                   <span style={{ position: 'absolute', top: 14, insetInlineStart: 14, padding: '4px 12px', background: 'rgba(58,42,28,.92)', color: '#f4e9d4', borderRadius: 999, fontSize: 11, fontFamily: "'Reem Kufi', sans-serif", letterSpacing: '.08em' }}>{p.category}</span>
@@ -221,13 +223,40 @@ const TplHeritage = ({ t, projects, services, features, stats, testimonials, faq
       <section style={{ padding: '90px 36px', background: '#b85c3d', color: '#f4e9d4', position: 'relative', overflow: 'hidden' }}>
         <div style={{ position: 'absolute', inset: 0, background: pattern, backgroundSize: '80px 80px', opacity: .15, filter: 'invert(.7)' }}></div>
         <div style={{ maxWidth: 820, margin: '0 auto', textAlign: 'center', position: 'relative' }}>
-          <div style={{ fontFamily: "'Amiri', serif", fontSize: 72, lineHeight: .5, marginBottom: 22, opacity: .6 }}>“</div>
+          <div style={{ fontFamily: "'Amiri', serif", fontSize: 72, lineHeight: .5, marginBottom: 22, opacity: .6 }}>"</div>
           <p style={{ margin: 0, fontFamily: "'Amiri', serif", fontSize: 'clamp(22px, 2.8vw, 32px)', lineHeight: 1.65, fontWeight: 400 }}>
             {testimonials[0]?.text || ''}
           </p>
           <div style={{ width: 50, height: 1, background: '#f4e9d4', margin: '32px auto', opacity: .5 }}></div>
           <div style={{ fontFamily: "'Amiri', serif", fontSize: 18, fontWeight: 700 }}>— {testimonials[0]?.name || ''}</div>
           <div style={{ fontSize: 13, opacity: .8, marginTop: 4, fontFamily: "'Reem Kufi', sans-serif" }}>{testimonials[0]?.role || ''}</div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ padding: '90px 36px', background: '#e3d3b5', position: 'relative', overflow: 'hidden' }}>
+        <div style={{ position: 'absolute', inset: 0, background: pattern, backgroundSize: '100px 100px', opacity: .2, pointerEvents: 'none' }}></div>
+        <div style={{ maxWidth: 860, margin: '0 auto', position: 'relative' }}>
+          <div style={{ textAlign: 'center', marginBottom: 50 }}>
+            <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 11, letterSpacing: '.25em', textTransform: 'uppercase', color: '#b85c3d', fontWeight: 600, marginBottom: 14 }}>أسئلة شائعة</div>
+            <h2 style={{ margin: 0, fontFamily: "'Amiri', serif", fontSize: 'clamp(34px, 4.5vw, 56px)', fontWeight: 700, color: '#3a2a1c' }}>استفساراتُكم.</h2>
+          </div>
+          <div>
+            {faqs.map(q => (
+              <div key={q.id} style={{ borderBottom: '1px solid #c8b58a', background: 'transparent' }}>
+                <button
+                  onClick={() => setFaqOpen(faqOpen === q.id ? null : q.id)}
+                  style={{ width: '100%', textAlign: 'right', padding: '20px 0', display: 'flex', alignItems: 'center', gap: 14, fontFamily: "'Amiri', serif", fontSize: 19, fontWeight: 700, color: '#3a2a1c' }}
+                >
+                  <span style={{ flex: 1 }}>{q.q}</span>
+                  <span style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 18, color: '#b85c3d', transform: faqOpen === q.id ? 'rotate(45deg)' : 'none', transition: '.2s', display: 'inline-block' }}>+</span>
+                </button>
+                {faqOpen === q.id && (
+                  <div style={{ paddingBottom: 20, fontSize: 16, lineHeight: 1.85, color: '#5c4830', fontFamily: "'Markazi Text', serif" }}>{q.a}</div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -246,7 +275,7 @@ const TplHeritage = ({ t, projects, services, features, stats, testimonials, faq
             أول استشارة مجانية. تواصل معنا لنناقش رؤيتك.
           </p>
           <div style={{ display: 'flex', gap: 12, justifyContent: 'center', flexWrap: 'wrap' }}>
-            <a href={`https://wa.me/${t.whatsapp.replace(/\D/g, '')}`} target="_blank" style={{ padding: '14px 30px', borderRadius: 999, background: '#3a2a1c', color: '#f4e9d4', fontFamily: "'Markazi Text', serif", fontSize: 15, fontWeight: 500 }}>عبر واتساب</a>
+            <a href={wa} target="_blank" style={{ padding: '14px 30px', borderRadius: 999, background: '#3a2a1c', color: '#f4e9d4', fontFamily: "'Markazi Text', serif", fontSize: 15, fontWeight: 500 }}>عبر واتساب</a>
             <a href={`tel:${t.phone.replace(/\s/g, '')}`} style={{ padding: '14px 30px', borderRadius: 999, background: 'transparent', border: '1.5px solid #3a2a1c', color: '#3a2a1c', fontFamily: "'Markazi Text', serif", fontSize: 15, fontWeight: 500 }}>{t.phone}</a>
           </div>
           <div style={{ marginTop: 36, fontSize: 14, color: '#7a6240', fontFamily: "'Markazi Text', serif" }}>
@@ -259,13 +288,46 @@ const TplHeritage = ({ t, projects, services, features, stats, testimonials, faq
       <footer style={{ background: '#3a2a1c', color: '#f4e9d4', padding: '40px 36px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16, fontSize: 13, fontFamily: "'Markazi Text', serif" }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <span style={{ fontFamily: "'Amiri', serif", fontSize: 22, fontWeight: 700, color: '#f4e9d4' }}>الفارابي</span>
+            <span style={{ fontFamily: "'Amiri', serif", fontSize: 22, fontWeight: 700 }}>{t.name_ar}</span>
             <span style={{ opacity: .5 }}>·</span>
             <span style={{ opacity: .7 }}>منذ 1432هـ</span>
           </div>
           <span style={{ opacity: .7 }}>© 2026 — جميع الحقوق محفوظة</span>
+          <a href="/" style={{ fontSize: 11, color: '#e8a878', opacity: .6 }}>مدعوم بواسطة وجود</a>
         </div>
       </footer>
+
+      {/* Floating WhatsApp */}
+      <a href={wa} target="_blank" style={{
+        position: 'fixed', bottom: 24, insetInlineStart: 24,
+        width: 52, height: 52, borderRadius: '50%',
+        background: '#25D366', color: '#fff',
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: '0 6px 20px rgba(37,211,102,.4)', zIndex: 40,
+      }}>
+        {React.createElement(Icons.whatsapp, { size: 24 })}
+      </a>
+
+      {/* Project Modal */}
+      {project && (
+        <div onClick={() => setProject(null)} style={{ position: 'fixed', inset: 0, zIndex: 100, background: 'rgba(58,42,28,.65)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: 24 }}>
+          <div onClick={e => e.stopPropagation()} style={{ background: '#f4e9d4', border: '1px solid #d4c19a', borderRadius: 12, maxWidth: 900, width: '100%', maxHeight: '90vh', overflowY: 'auto' }}>
+            <div style={{ position: 'relative' }}>
+              <ProjectCover seed={project.cover_seed} h={380} radius={0} />
+              <button onClick={() => setProject(null)} style={{ position: 'absolute', top: 14, insetInlineEnd: 14, width: 36, height: 36, background: 'rgba(58,42,28,.8)', color: '#f4e9d4', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20, borderRadius: '50%' }}>×</button>
+            </div>
+            <div style={{ padding: '28px 32px' }}>
+              <div style={{ fontFamily: "'Reem Kufi', sans-serif", fontSize: 11, color: '#b85c3d', letterSpacing: '.2em', textTransform: 'uppercase', marginBottom: 10 }}>{project.category} · {project.year}</div>
+              <h2 style={{ margin: '0 0 10px', fontFamily: "'Amiri', serif", fontSize: 30, fontWeight: 700, color: '#3a2a1c' }}>{project.title_ar}</h2>
+              <div style={{ color: '#7a6240', fontFamily: "'Markazi Text', serif", fontSize: 16, marginBottom: 18 }}>{project.location}{project.area ? ` · ${project.area} م²` : ''}</div>
+              <p style={{ margin: '0 0 22px', fontSize: 16, lineHeight: 1.85, color: '#5c4830', fontFamily: "'Markazi Text', serif" }}>
+                مشروع يحمل روح المكان وعمق الموروث المعماري السعودي. صُمّم بعناية ليُجسّد الهوية ويُلبّي متطلبات العصر مع احترام القيم الأصيلة.
+              </p>
+              <a href={wa} target="_blank" style={{ display: 'inline-block', padding: '12px 24px', borderRadius: 999, background: '#3a2a1c', color: '#f4e9d4', fontFamily: "'Markazi Text', serif", fontSize: 14, fontWeight: 500 }}>استفسر عن هذا المشروع</a>
+            </div>
+          </div>
+        </div>
+      )}
 
       <style>{`
         @media (max-width: 980px) {

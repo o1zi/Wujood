@@ -1,6 +1,16 @@
 // Landing — صفحة المنصة التسويقية
 
+const PLATFORM_FAQS = [
+  { id: 'f1', q: 'كيف أحصل على حساب في وجود؟', a: 'تواصل معنا عبر واتساب وأرسل اسم مكتبك وقطاعك. نُعدّ الحساب خلال 24 ساعة من استلام التحويل البنكي.' },
+  { id: 'f2', q: 'هل أحتاج خبرة تقنية لإدارة الموقع؟', a: 'لا على الإطلاق. لوحة التحكم مصممة لغير المتخصصين — تضيف مشاريعك وبياناتك بنفس سهولة تعديل ملف Word.' },
+  { id: 'f3', q: 'هل يمكنني تغيير القالب لاحقاً؟', a: 'نعم، تغيير القالب لا يمسّ البيانات. باقة Pro فأعلى تتيح كل القوالب، وباقة Premium تشمل قوالب مصممة خصيصاً لقطاعك.' },
+  { id: 'f4', q: 'ما طريقة الدفع وهل الاشتراك سنوي؟', a: 'التجديد سنوي عبر التحويل البنكي. لا بطاقات، لا اشتراكات تلقائية. تستلم فاتورة رسمية بعد كل دفعة.' },
+  { id: 'f5', q: 'هل يدعم الموقع العربية؟', a: 'الموقع عربي بالكامل — RTL أصيل، خطوط عربية متطورة، وتصميم يحترم ثقافة القطاع المهني السعودي.' },
+];
+
 const Landing = ({ go }) => {
+  const [faqOpen, setFaqOpen] = React.useState(null);
+
   return (
     <div style={{ minHeight: '100vh', background: 'var(--bg)' }}>
       {/* Top bar */}
@@ -16,8 +26,13 @@ const Landing = ({ go }) => {
         }}>
           <Logo size={22} />
           <nav style={{ display: 'flex', gap: 4, alignItems: 'center' }} className="lg-nav">
-            {['الميزات', 'القوالب', 'الباقات', 'الأسئلة'].map((x) => (
-              <a key={x} href="#" style={{ padding: '8px 14px', fontSize: 14, color: 'var(--ink-soft)', borderRadius: 8 }}>{x}</a>
+            {[
+              { label: 'الميزات', href: '#features' },
+              { label: 'القوالب', href: '#templates' },
+              { label: 'الباقات', href: '#pricing' },
+              { label: 'الأسئلة', href: '#faq' },
+            ].map((x) => (
+              <a key={x.label} href={x.href} style={{ padding: '8px 14px', fontSize: 14, color: 'var(--ink-soft)', borderRadius: 8 }}>{x.label}</a>
             ))}
           </nav>
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -54,11 +69,11 @@ const Landing = ({ go }) => {
             </p>
             <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
               <Btn kind="primary" size="lg" iconAfter="arrowLeft" onClick={() => window.open('https://wa.me/966500000000', '_blank')}>اطلب حسابك عبر واتساب</Btn>
-              <Btn kind="secondary" size="lg" icon="eye" onClick={() => go('#/site/alfarabi')}>شاهد عرضاً مباشراً</Btn>
+              <Btn kind="secondary" size="lg" icon="eye" onClick={() => go('#/site/demo/modern')}>شاهد عرضاً مباشراً</Btn>
             </div>
             <div style={{ marginTop: 36, display: 'flex', gap: 32, flexWrap: 'wrap' }}>
               {[
-                { v: '5+', l: 'قوالب جاهزة' },
+                { v: '6+', l: 'قوالب جاهزة' },
                 { v: 'RTL', l: 'دعم عربي كامل' },
                 { v: '24h', l: 'تفعيل خلال يوم' },
                 { v: '99.9%', l: 'وقت تشغيل' },
@@ -97,8 +112,8 @@ const Landing = ({ go }) => {
           </div>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 18 }} className="features-grid">
             {[
-              { icon: 'palette', t: 'قوالب احترافية', d: '5 قوالب جاهزة + قوالب مخصصة تُبنى لمكاتب محددة. كل قالب يحترم هوية القطاع.' },
-              { icon: 'globe', t: 'دومين خاص', d: 'subdomain.wujood.sa مجاناً، أو دومين مستقل (مثل moktab.com) في باقة Premium.' },
+              { icon: 'palette', t: 'قوالب احترافية', d: '6 قوالب جاهزة + قوالب مخصصة تُبنى لمكاتب محددة. كل قالب يحترم هوية القطاع.' },
+              { icon: 'globe', t: 'دومين خاص', d: 'subdomain.wujood.sa مجاناً، أو دومين مستقل في باقة Premium.' },
               { icon: 'image', t: 'إدارة محتوى ذكية', d: 'ارفع المشاريع والصور، رتّب بالسحب والإفلات، وانشر بضغطة. لا أكواد ولا تعقيد.' },
               { icon: 'shield', t: 'أمان متعدد المستويات', d: 'كل بيانات مكتبك معزولة تماماً. RLS على مستوى قاعدة البيانات، لا يصلها أحد غيرك.' },
               { icon: 'bolt', t: 'سرعة عالية', d: 'صفحات تُحمَّل في أقل من ثانية، مُحسَّنة لمحركات البحث وقابلة للمشاركة على السوشيال.' },
@@ -116,20 +131,21 @@ const Landing = ({ go }) => {
           <div style={{ display: 'flex', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: 36, flexWrap: 'wrap', gap: 16 }}>
             <div>
               <span style={{ fontSize: 12, color: 'var(--accent)', fontFamily: 'var(--font-mono)', letterSpacing: '.1em', textTransform: 'uppercase' }}>القوالب</span>
-              <h2 style={{ margin: '12px 0 6px', fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 600, letterSpacing: '-0.02em' }}>5 قوالب أساسية، آلاف الاحتمالات</h2>
+              <h2 style={{ margin: '12px 0 6px', fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 600, letterSpacing: '-0.02em' }}>6 قوالب أساسية، آلاف الاحتمالات</h2>
               <p style={{ margin: 0, color: 'var(--muted)' }}>كل قالب قابل للتخصيص الكامل من المحرر المرئي — ألوان، خطوط، تخطيطات، تأثيرات.</p>
             </div>
-            <Btn kind="secondary" iconAfter="arrowLeft" onClick={() => go('#/site/alfarabi')}>عرض مباشر</Btn>
+            <Btn kind="secondary" iconAfter="arrowLeft" onClick={() => go('#/site/demo/modern')}>عرض مباشر</Btn>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: 14 }} className="templates-grid">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(6, 1fr)', gap: 12 }} className="templates-grid">
             {[
-              { name: 'Modern', desc: 'أبيض + accent، هندسي', colors: ['#ffffff', '#0e3b2e', '#b08a3e'] },
-              { name: 'Classic', desc: 'كريمي + بني + ذهبي', colors: ['#f6efe3', '#5a3e2b', '#c69749'] },
-              { name: 'Bold', desc: 'أسود + لون صارخ', colors: ['#0a0a0a', '#ff3b30', '#fafafa'] },
-              { name: 'Minimal', desc: 'أبيض + رمادي', colors: ['#fafafa', '#1a1a1a', '#888'] },
-              { name: 'Luxury', desc: 'أسود + ذهبي', colors: ['#0a0a0a', '#d4a85a', '#f4ecd8'] },
-            ].map((t) => (
-              <TemplateMini key={t.name} {...t} />
+              { id: 'modern',   name: 'Modern',   nameAr: 'العصري',    desc: 'أبيض + أخضر',  colors: ['#ffffff', '#0e3b2e', '#b08a3e'] },
+              { id: 'classic',  name: 'Classic',  nameAr: 'الكلاسيكي', desc: 'كريمي + ذهبي', colors: ['#f6efe3', '#5a3e2b', '#c69749'] },
+              { id: 'heritage', name: 'Heritage', nameAr: 'التراثي',   desc: 'طيني + نقوش',  colors: ['#f4e9d4', '#b85c3d', '#3a2a1c'] },
+              { id: 'minimal',  name: 'Minimal',  nameAr: 'البسيط',    desc: 'أبيض + مساحات',colors: ['#fafafa', '#1a1a1a', '#888888'] },
+              { id: 'luxury',   name: 'Luxury',   nameAr: 'الفاخر',    desc: 'داكن + ذهبي',  colors: ['#0a0a0a', '#d4a85a', '#f4ecd8'] },
+              { id: 'studio',   name: 'Studio',   nameAr: 'الاستوديو', desc: 'صور + ساج',    colors: ['#fafaf6', '#1a1a1c', '#7a8c6f'] },
+            ].map((tpl) => (
+              <TemplateMini key={tpl.id} {...tpl} go={go} />
             ))}
           </div>
         </div>
@@ -149,8 +165,40 @@ const Landing = ({ go }) => {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section id="faq" style={{ padding: '80px 28px', background: 'var(--surface)', borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
+        <div style={{ maxWidth: 780, margin: '0 auto' }}>
+          <div style={{ textAlign: 'center', marginBottom: 52 }}>
+            <span style={{ fontSize: 12, color: 'var(--accent)', fontFamily: 'var(--font-mono)', letterSpacing: '.1em', textTransform: 'uppercase' }}>الأسئلة</span>
+            <h2 style={{ margin: '12px 0 0', fontFamily: 'var(--font-display)', fontSize: 36, fontWeight: 600, letterSpacing: '-0.02em' }}>أسئلة شائعة</h2>
+          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+            {PLATFORM_FAQS.map(q => (
+              <div key={q.id} style={{ border: '1px solid var(--border)', borderRadius: 'var(--r-md)', background: 'var(--bg)', overflow: 'hidden' }}>
+                <button
+                  onClick={() => setFaqOpen(faqOpen === q.id ? null : q.id)}
+                  style={{ width: '100%', textAlign: 'right', padding: '18px 22px', display: 'flex', alignItems: 'center', gap: 12, fontFamily: 'var(--font-display)', fontSize: 16, fontWeight: 500, color: 'var(--ink)' }}
+                >
+                  <span style={{ flex: 1 }}>{q.q}</span>
+                  <span style={{ transform: faqOpen === q.id ? 'rotate(180deg)' : 'none', transition: 'transform .2s', color: 'var(--accent)' }}>
+                    {React.createElement(Icons.chevronDown, { size: 18 })}
+                  </span>
+                </button>
+                {faqOpen === q.id && (
+                  <div style={{ padding: '0 22px 18px', color: 'var(--muted)', fontSize: 14.5, lineHeight: 1.75 }}>{q.a}</div>
+                )}
+              </div>
+            ))}
+          </div>
+          <div style={{ textAlign: 'center', marginTop: 36 }}>
+            <span style={{ fontSize: 14, color: 'var(--muted)' }}>سؤال آخر؟ </span>
+            <button onClick={() => window.open('https://wa.me/966500000000', '_blank')} style={{ fontSize: 14, color: 'var(--primary)', fontWeight: 500 }}>راسلنا على واتساب</button>
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
-      <section style={{ padding: '0 28px 100px' }}>
+      <section style={{ padding: '0 28px 100px', paddingTop: 80 }}>
         <div style={{
           maxWidth: 1240, margin: '0 auto',
           background: 'var(--primary)',
@@ -189,14 +237,19 @@ const Landing = ({ go }) => {
             <span style={{ color: 'var(--muted)', fontSize: 13 }}>© 2026 — جميع الحقوق محفوظة</span>
           </div>
           <div style={{ display: 'flex', gap: 22, fontSize: 13 }}>
-            {['الشروط', 'الخصوصية', 'اتصل بنا', 'الدعم'].map(x => (
-              <a key={x} href="#" style={{ color: 'var(--muted)' }}>{x}</a>
-            ))}
+            <a href="#features" style={{ color: 'var(--muted)' }}>الميزات</a>
+            <a href="#templates" style={{ color: 'var(--muted)' }}>القوالب</a>
+            <a href="#pricing" style={{ color: 'var(--muted)' }}>الباقات</a>
+            <a href="#faq" style={{ color: 'var(--muted)' }}>الأسئلة</a>
+            <button onClick={() => window.open('https://wa.me/966500000000', '_blank')} style={{ color: 'var(--muted)', fontSize: 13 }}>تواصل</button>
           </div>
         </div>
       </footer>
 
       <style>{`
+        @media (max-width: 1080px) {
+          .templates-grid { grid-template-columns: repeat(3, 1fr) !important; }
+        }
         @media (max-width: 980px) {
           .hero-grid { grid-template-columns: 1fr !important; }
           .features-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -262,27 +315,31 @@ const FeatureCard = ({ icon, t, d }) => (
   </div>
 );
 
-const TemplateMini = ({ name, desc, colors }) => (
-  <div style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', overflow: 'hidden', transition: 'transform .2s' }}>
+const TemplateMini = ({ id, name, nameAr, desc, colors, go }) => (
+  <div
+    onClick={() => go && go(`#/site/demo/${id}`)}
+    style={{ background: 'var(--surface)', border: '1px solid var(--border)', borderRadius: 'var(--r-md)', overflow: 'hidden', cursor: 'pointer', transition: 'transform .15s, box-shadow .15s' }}
+    onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-3px)'; e.currentTarget.style.boxShadow = 'var(--sh-lg)'; }}
+    onMouseLeave={e => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.boxShadow = 'none'; }}
+  >
     <div style={{
       aspectRatio: '4/5',
       background: colors[0],
       padding: 14,
       display: 'flex', flexDirection: 'column', justifyContent: 'space-between',
       color: colors[1],
+      borderBottom: '1px solid var(--border)',
     }}>
-      <div style={{ fontSize: 10, fontWeight: 600, fontFamily: name === 'Classic' || name === 'Luxury' ? 'serif' : 'inherit' }}>{name === 'Bold' || name === 'Luxury' ? 'STUDIO' : 'استوديو'}</div>
+      <div style={{ fontSize: 9, fontWeight: 600, opacity: .6 }}>{name.toUpperCase()}</div>
       <div>
-        <div style={{ fontSize: 16, fontFamily: name === 'Classic' || name === 'Luxury' ? 'serif' : 'var(--font-display)', fontWeight: 600, marginBottom: 8, color: colors[1] }}>
-          مكتب{name === 'Bold' ? '.' : ''}
-        </div>
-        <div style={{ height: 4, background: colors[2], width: '60%', marginBottom: 6, borderRadius: name === 'Bold' ? 0 : 2 }}></div>
-        <div style={{ height: 4, background: colors[1], width: '40%', opacity: .3, borderRadius: name === 'Bold' ? 0 : 2 }}></div>
+        <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 8, color: colors[1] }}>مكتب</div>
+        <div style={{ height: 3, background: colors[2], width: '60%', marginBottom: 5, borderRadius: 2 }}></div>
+        <div style={{ height: 3, background: colors[1], width: '40%', opacity: .3, borderRadius: 2 }}></div>
       </div>
     </div>
-    <div style={{ padding: '12px 14px' }}>
-      <div style={{ fontSize: 13, fontWeight: 600 }}>{name}</div>
-      <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>{desc}</div>
+    <div style={{ padding: '10px 12px' }}>
+      <div style={{ fontSize: 12, fontWeight: 600, color: 'var(--ink)' }}>{nameAr}</div>
+      <div style={{ fontSize: 10, color: 'var(--muted)', marginTop: 2 }}>{desc}</div>
     </div>
   </div>
 );
@@ -307,7 +364,7 @@ const PricingCard = ({ plan }) => {
         }}>الأكثر شيوعاً</span>
       )}
       <div>
-        <div style={{ fontFamily: 'var(--font-display)', fontSize: 14, fontWeight: 500, color: isFeatured ? 'var(--accent)' : 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.1em', fontFamily: 'var(--font-mono)' }}>{plan.label}</div>
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 14, fontWeight: 500, color: isFeatured ? 'var(--accent)' : 'var(--muted)', textTransform: 'uppercase', letterSpacing: '.1em' }}>{plan.label}</div>
         <div style={{ fontFamily: 'var(--font-display)', fontSize: 22, fontWeight: 600, marginTop: 4 }}>{plan.labelAr}</div>
       </div>
       <div style={{ display: 'flex', alignItems: 'baseline', gap: 4 }}>
