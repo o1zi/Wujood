@@ -24,10 +24,12 @@ const App = () => {
   };
 
   useEffect(() => {
+    const forceReady = setTimeout(() => { setAuthReady(true); }, 3000);
+    
     if (typeof sbGetSession !== 'function') {
       console.error('sbGetSession not available, setting authReady');
       setAuthReady(true);
-      return;
+      return () => clearTimeout(forceReady);
     }
     sbGetSession().then(async (session) => {
       try {
@@ -41,7 +43,8 @@ const App = () => {
         console.error('Auth init error:', e);
       }
       setAuthReady(true);
-    }).catch(() => setAuthReady(true));
+      clearTimeout(forceReady);
+    }).catch(() => { setAuthReady(true); clearTimeout(forceReady); });
 
     if (typeof sbOnAuthChange === 'function') {
     const { data: { subscription } } = sbOnAuthChange(async (event, session) => {
