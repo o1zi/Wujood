@@ -80,6 +80,7 @@ const App = () => {
     view = <Auth go={go} />;
   } else if (route.startsWith('/dashboard')) {
     if (!user) { setTimeout(() => go('#/login'), 0); return null; }
+    if (isAdmin) { setTimeout(() => go('#/admin'), 0); return null; }
     view = <Tenant go={go} tenant={tenant} setTenant={setTenant} />;
   } else if (route === '/theme-builder') {
     view = <ThemeBuilder go={go} />;
