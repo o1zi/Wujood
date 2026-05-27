@@ -5,19 +5,19 @@ const SUPABASE_URL  = ENV.SUPABASE_URL  || 'MISSING_SUPABASE_URL';
 const SUPABASE_ANON = ENV.SUPABASE_ANON || 'MISSING_SUPABASE_ANON';
 const SUPABASE_SVC  = ENV.SUPABASE_SVC  || SUPABASE_ANON;
 
-const { createClient } = window.supabase;
+const _createClient = window.supabase.createClient;
 
 if (!ENV.SUPABASE_URL) console.warn('⚠️ .env.js مفقود — تأكد من وجود ملف البيئة أو متغيرات Vercel');
 
-const { createClient } = window.supabase;
+const _createClient = window.supabase.createClient;
 
 // Main client — regular user sessions
-const sb = createClient(SUPABASE_URL, SUPABASE_ANON, {
+const sb = _createClient(SUPABASE_URL, SUPABASE_ANON, {
   auth: { persistSession: true, storageKey: 'wujood_session' },
 });
 
 // Admin client — service role, never persists a session
-const sbAdm = createClient(SUPABASE_URL, SUPABASE_SVC, {
+const sbAdm = _createClient(SUPABASE_URL, SUPABASE_SVC, {
   auth: { persistSession: false, autoRefreshToken: false },
 });
 
