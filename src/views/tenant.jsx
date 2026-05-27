@@ -39,8 +39,7 @@ const TenantShell = ({ children, page, setPage, go, tenant }) => {
           </div>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 10 }}>
             <PlanPill plan={t.plan || 'basic'} />
-            <a href={`#/site/${t.slug}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--primary)', fontWeight: 500 }}
-               onClick={e => { e.preventDefault(); window.open(`#/site/${t.slug}`, '_blank'); }}>
+            <a href={`/site/${t.slug}`} target="_blank" style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: 'var(--primary)', fontWeight: 500 }}>
               زيارة الموقع {React.createElement(Icons.external, { size: 11 })}
             </a>
           </div>
@@ -108,7 +107,7 @@ const TenantHome = ({ go, setPage, tenant }) => {
       <SectionHeader
         title={`أهلاً، ${t.short_ar || t.name_ar}`}
         sub={`اشتراكك ينتهي بعد ${days} يوم — ${fmtDate(t.ends_at)}`}
-        action={<Btn kind="primary" icon="external" onClick={() => window.open(`#/site/${t.slug}`, '_blank')}>زيارة موقعي</Btn>}
+        action={<Btn kind="primary" icon="external" onClick={() => window.open(`/site/${t.slug}`, '_blank')}>زيارة موقعي</Btn>}
       />
 
       {days <= 30 && (
@@ -1139,7 +1138,7 @@ const TenantDomain = ({ tenant }) => {
             <span style={{ fontFamily: 'var(--font-mono)', fontSize: 14, flex: 1 }}>{t.subdomain || `${t.slug}.wujood.sa`}</span>
             <Badge tone="green" dot>نشط</Badge>
             <IconBtn icon="copy" title="نسخ" onClick={() => copyLink(t.subdomain || `${t.slug}.wujood.sa`)} />
-            <IconBtn icon="external" title="فتح" onClick={() => window.open(`#/site/${t.slug}`, '_blank')} />
+            <IconBtn icon="external" title="فتح" onClick={() => window.open(`/site/${t.slug}`, '_blank')} />
           </div>
           <p style={{ marginTop: 12, fontSize: 12.5, color: 'var(--muted)', lineHeight: 1.6 }}>
             هذا الرابط متاح لجميع الباقات وغير قابل للتغيير بعد الإنشاء.

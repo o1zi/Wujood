@@ -302,7 +302,7 @@ const AdminTenants = ({ go }) => {
                   </td>
                   <td style={{ padding: '12px 14px' }} onClick={(e) => e.stopPropagation()}>
                     <div style={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-                      <IconBtn icon="external" size={28} title="فتح موقع المكتب" onClick={() => window.open(`#/site/${slug}`, '_blank')} />
+                      <IconBtn icon="external" size={28} title="فتح موقع المكتب" onClick={() => window.open(`/site/${slug}`, '_blank')} />
                       <IconBtn icon="edit" size={28} title="تعديل" onClick={() => setOpening(t)} />
                     </div>
                   </td>
@@ -511,8 +511,8 @@ const TenantDetailModal = ({ tenant, onClose, go, onRefresh }) => {
       width={720}
       footer={
         <>
-          <Btn kind="primary" icon="external" onClick={() => window.open(`#/site/${slug}`, '_blank')}>فتح موقع المكتب</Btn>
-          <Btn kind="secondary" icon="user" onClick={() => { onClose(); if (slug) go(`#/site/${slug}`); }}>دخول كصاحب المكتب</Btn>
+          <Btn kind="primary" icon="external" onClick={() => window.open(`/site/${slug}`, '_blank')}>فتح موقع المكتب</Btn>
+          <Btn kind="secondary" icon="user" onClick={() => { onClose(); if (slug) go(`/site/${slug}`); }}>دخول كصاحب المكتب</Btn>
           <div style={{ marginInlineStart: 'auto' }}><Btn kind="danger" icon="trash" onClick={() => handleAction('delete')} disabled={busy}>حذف نهائي</Btn></div>
         </>
       }

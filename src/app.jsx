@@ -1,34 +1,24 @@
-// Main app — hash-based router + Supabase auth state
+// Main app — pushState router + Supabase auth state
 
-// Convert path-based URLs (e.g. /site/alfarabi from Vercel) to hash equivalents
-(function () {
-  const path = window.location.pathname;
-  if (path && path !== '/' && !window.location.hash) {
-    window.location.replace('/#' + path + window.location.search);
-  }
-})();
-
-const useHashRoute = () => {
-  const [hash, setHash] = useState(() => {
-    const h = window.location.hash;
-    return (h && h.startsWith('#/')) ? h : '#/';
-  });
+const usePushRoute = () => {
+  const [route, setRoute] = useState(window.location.pathname || '/');
   useEffect(() => {
-    const handler = () => {
-      const h = window.location.hash;
-      // Only react to app routes (#/...). Anchor links (#about, bare #) are ignored —
-      // the browser scrolls to the target element natively without a route change.
-      if (h && h.startsWith('#/')) setHash(h);
-    };
-    window.addEventListener('hashchange', handler);
-    return () => window.removeEventListener('hashchange', handler);
+    const h = () => setRoute(window.location.pathname || '/');
+    window.addEventListener('popstate', h);
+    return () => window.removeEventListener('popstate', h);
   }, []);
-  return [hash, (h) => { window.location.hash = h.startsWith('#') ? h.slice(1) : h; window.scrollTo(0, 0); }];
+  const go = (to) => {
+    // Accept both '/dashboard' and '#/dashboard' (legacy callers)
+    const path = (to || '/').replace(/^#/, '') || '/';
+    if (window.location.pathname !== path) history.pushState({}, '', path);
+    setRoute(path);
+    window.scrollTo(0, 0);
+  };
+  return [route, go];
 };
 
 const App = () => {
-  const [hash, go]      = useHashRoute();
-  const route           = hash.replace(/^#/, '') || '/';
+  const [route, go] = usePushRoute();
   const [authReady, setAuthReady] = useState(false);
   const [user,   setUser]   = useState(null);
   const [isAdmin,setIsAdmin]= useState(false);
@@ -96,17 +86,17 @@ const App = () => {
   if (route === '/' || route === '') {
     view = <Landing go={go} />;
   } else if (route === '/login') {
-    if (user) { setTimeout(() => go(isAdminEffective ? '#/admin' : '#/dashboard'), 0); return null; }
+    if (user) { setTimeout(() => go(isAdminEffective ? '/admin' : '/dashboard'), 0); return null; }
     view = <Auth go={go} />;
   } else if (route.startsWith('/dashboard')) {
-    if (!user && !sessionStorage.getItem('wujood_admin')) { setTimeout(() => go('#/login'), 0); return null; }
-    if (isAdminEffective) { setTimeout(() => go('#/admin'), 0); return null; }
+    if (!user && !sessionStorage.getItem('wujood_admin')) { setTimeout(() => go('/login'), 0); return null; }
+    if (isAdminEffective) { setTimeout(() => go('/admin'), 0); return null; }
     view = <Tenant go={go} tenant={tenant} setTenant={setTenant} user={user} />;
   } else if (route === '/theme-builder') {
     view = <ThemeBuilder go={go} />;
   } else if (route.startsWith('/admin')) {
-    if (!user && !sessionStorage.getItem('wujood_admin')) { setTimeout(() => go('#/login'), 0); return null; }
-    if (!isAdminEffective) { setTimeout(() => go('#/dashboard'), 0); return null; }
+    if (!user && !sessionStorage.getItem('wujood_admin')) { setTimeout(() => go('/login'), 0); return null; }
+    if (!isAdminEffective) { setTimeout(() => go('/dashboard'), 0); return null; }
     view = <Admin go={go} />;
   } else if (route.startsWith('/site/')) {
     const parts = route.split('/site/')[1].split('/');

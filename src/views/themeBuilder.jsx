@@ -60,7 +60,7 @@ const ThemeBuilder = ({ go }) => {
         </div>
         <div style={{ flex: 1 }}></div>
         <div style={{ display: 'flex', gap: 8 }}>
-          <Btn kind="ghost" icon="eye" onClick={() => window.open('#/site/alfarabi/modern', '_blank')}>معاينة كاملة</Btn>
+          <Btn kind="ghost" icon="eye" onClick={() => window.open('/site/demo/modern', '_blank')}>معاينة كاملة</Btn>
           <Btn kind="secondary" icon="download" onClick={() => { localStorage.setItem('wujood_theme_draft', JSON.stringify(theme)); showToast('تم حفظ المسودة محلياً ✓'); }}>حفظ كمسودة</Btn>
           <Btn kind="primary" icon="check" onClick={() => { localStorage.setItem('wujood_theme_published', JSON.stringify(theme)); showToast('تم نشر القالب ✓ (محلياً)'); }}>نشر القالب</Btn>
         </div>
