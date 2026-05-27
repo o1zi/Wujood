@@ -13,14 +13,23 @@ const Auth = ({ go }) => {
     setLoading(true);
     setError('');
 
-    const { error: authErr } = await sbSignIn(email, password);
-    if (authErr) {
+    let result;
+    try {
+      result = await sbSignIn(email, password);
+    } catch (err) {
+      setError('حدث خطأ في الاتصال. حاول مرة أخرى.');
+      setLoading(false);
+      return;
+    }
+
+    if (result?.error) {
       setError('البريد الإلكتروني أو كلمة المرور غير صحيحة.');
       setLoading(false);
       return;
     }
 
-    const admin = await sbIsAdmin();
+    let admin = false;
+    try { admin = await sbIsAdmin(); } catch (err) {}
 
     if (role === 'admin' && !admin) {
       setError('هذا الحساب ليس أدمناً على المنصة.');
@@ -30,8 +39,8 @@ const Auth = ({ go }) => {
     }
 
     sessionStorage.setItem('wujood_admin', admin ? '1' : '0');
-    go(admin ? '#/admin' : '#/dashboard');
     setLoading(false);
+    go(admin ? '/admin' : '/dashboard');
   };
 
   return (
