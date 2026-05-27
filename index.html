@@ -6,50 +6,7 @@
   <title>وجود — منصة بناء مواقع المكاتب المهنية</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* App shell */
     #app { min-height: 100vh; }
-
-    /* Top route switcher (dev/preview only) */
-    .wj-nav-switcher {
-      position: fixed;
-      bottom: 16px; left: 50%;
-      transform: translateX(-50%);
-      z-index: 1000;
-      display: inline-flex; gap: 2px;
-      background: rgba(20, 32, 26, 0.92);
-      backdrop-filter: blur(10px);
-      border-radius: 999px;
-      padding: 4px;
-      box-shadow: var(--sh-lg);
-      max-width: calc(100vw - 32px);
-      overflow-x: auto;
-    }
-    .wj-nav-switcher::-webkit-scrollbar { display: none; }
-    .wj-nav-switcher button {
-      color: rgba(255,255,255,.7);
-      font-size: 12.5px;
-      font-weight: 500;
-      padding: 7px 14px;
-      border-radius: 999px;
-      white-space: nowrap;
-      transition: all .15s;
-    }
-    .wj-nav-switcher button:hover { color: #fff; }
-    .wj-nav-switcher button.active {
-      background: var(--accent);
-      color: #fff;
-    }
-    .wj-nav-switcher .sep {
-      width: 1px; background: rgba(255,255,255,.12);
-      margin: 6px 4px;
-      flex-shrink: 0;
-    }
-    .wj-nav-label {
-      color: rgba(255,255,255,.4); font-size: 11px;
-      padding: 7px 8px 7px 4px; align-self: center;
-      font-family: var(--font-mono);
-      letter-spacing: .03em;
-    }
   </style>
 
   <!-- React 18 (pinned) -->
