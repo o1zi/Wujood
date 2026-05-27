@@ -44,10 +44,13 @@ const showToast = (msg, tone = 'ok') => {
 
 // ── Auth ──────────────────────────────────────────────────────
 const sbSignIn = (email, pw) => sb.auth.signInWithPassword({ email, password: pw });
-const sbSignOut = () => sb.auth.signOut();
+const sbSignOut = () => { sessionStorage.removeItem('wujood_admin'); return sb.auth.signOut(); };
 const sbGetSession = async () => { const { data: { session } } = await sb.auth.getSession(); return session; };
 const sbOnAuthChange = cb => sb.auth.onAuthStateChange(cb);
-const sbIsAdmin = async () => { const { data } = await sb.rpc('is_admin'); return !!data; };
+const sbIsAdmin = async () => {
+  try { const { data } = await sb.rpc('is_admin'); return !!data; }
+  catch (e) { console.error('is_admin RPC failed:', e); return false; }
+};
 
 // ── Tenant ────────────────────────────────────────────────────
 const sbGetMyTenant = async () => {

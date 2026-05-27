@@ -89,13 +89,13 @@ const App = () => {
     if (user) { setTimeout(() => go(isAdminEffective ? '#/admin' : '#/dashboard'), 0); return null; }
     view = <Auth go={go} />;
   } else if (route.startsWith('/dashboard')) {
-    if (!user) { setTimeout(() => go('#/login'), 0); return null; }
+    if (!user && !sessionStorage.getItem('wujood_admin')) { setTimeout(() => go('#/login'), 0); return null; }
     if (isAdminEffective) { setTimeout(() => go('#/admin'), 0); return null; }
     view = <Tenant go={go} tenant={tenant} setTenant={setTenant} />;
   } else if (route === '/theme-builder') {
     view = <ThemeBuilder go={go} />;
   } else if (route.startsWith('/admin')) {
-    if (!user) { setTimeout(() => go('#/login'), 0); return null; }
+    if (!user && !sessionStorage.getItem('wujood_admin')) { setTimeout(() => go('#/login'), 0); return null; }
     if (!isAdminEffective) { setTimeout(() => go('#/dashboard'), 0); return null; }
     view = <Admin go={go} />;
   } else if (route.startsWith('/site/')) {
