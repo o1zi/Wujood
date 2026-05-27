@@ -1,11 +1,27 @@
 // Main app — hash-based router + Supabase auth state
 
+// Convert path-based URLs (e.g. /site/alfarabi from Vercel) to hash equivalents
+(function () {
+  const path = window.location.pathname;
+  if (path && path !== '/' && !window.location.hash) {
+    window.location.replace('/#' + path + window.location.search);
+  }
+})();
+
 const useHashRoute = () => {
-  const [hash, setHash] = useState(window.location.hash || '#/');
+  const [hash, setHash] = useState(() => {
+    const h = window.location.hash;
+    return (h && h.startsWith('#/')) ? h : '#/';
+  });
   useEffect(() => {
-    const h = () => setHash(window.location.hash || '#/');
-    window.addEventListener('hashchange', h);
-    return () => window.removeEventListener('hashchange', h);
+    const handler = () => {
+      const h = window.location.hash;
+      // Only react to app routes (#/...). Anchor links (#about, bare #) are ignored —
+      // the browser scrolls to the target element natively without a route change.
+      if (h && h.startsWith('#/')) setHash(h);
+    };
+    window.addEventListener('hashchange', handler);
+    return () => window.removeEventListener('hashchange', handler);
   }, []);
   return [hash, (h) => { window.location.hash = h.startsWith('#') ? h.slice(1) : h; window.scrollTo(0, 0); }];
 };

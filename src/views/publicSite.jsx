@@ -75,14 +75,15 @@ const PublicSite = ({ slug, template = 'modern', go }) => {
   else if (template === 'studio')    view = <TplStudio {...props} />;
   else view = <TplModern {...props} go={go} />;
 
+  const isDemo = !slug || slug === 'demo';
   const goTpl = (tid) => go(`#/site/${slug}/${tid}`);
   const current = TEMPLATES.find(x => x.id === template) || TEMPLATES[0];
 
   return (
     <>
       {view}
-      {/* Floating template picker */}
-      <div style={{
+      {/* Floating template picker — only for demo */}
+      {isDemo && <div style={{
         position: 'fixed', top: 14, insetInlineStart: 14,
         zIndex: 200,
         background: 'rgba(20,32,26,.92)',
@@ -149,7 +150,7 @@ const PublicSite = ({ slug, template = 'modern', go }) => {
             ))}
           </div>
         )}
-      </div>
+      </div>}
     </>
   );
 };
@@ -219,12 +220,12 @@ const TplModern = ({ t, projects, services, features, stats, testimonials, faqs,
             color: scrolled ? 'var(--p-text)' : '#fff',
             display: 'inline-flex', alignItems: 'center', gap: 8,
           }}>
-            <span style={{ width: 24, height: 24, borderRadius: 4, background: 'var(--p-accent)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 700, fontFamily: 'var(--p-fhead)' }}>ف</span>
-            الفارابي
+            <span style={{ width: 24, height: 24, borderRadius: 4, background: 'var(--p-accent)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 12, fontWeight: 700, fontFamily: 'var(--p-fhead)' }}>{(t.name_ar || 'م').charAt(0)}</span>
+            {t.name_ar}
           </a>
           <nav style={{ display: 'flex', gap: 4 }} className="ps-nav">
-            {['الرئيسية', 'من نحن', 'المشاريع', 'الخدمات', 'تواصل'].map(x => (
-              <a key={x} href="#" style={{ padding: '8px 14px', fontSize: 14, color: scrolled ? 'var(--p-text)' : '#fff', opacity: .85, fontWeight: 500 }}>{x}</a>
+            {[['الرئيسية','#hero'],['من نحن','#about'],['المشاريع','#projects'],['الخدمات','#services'],['تواصل','#contact']].map(([label, href]) => (
+              <a key={label} href={href} style={{ padding: '8px 14px', fontSize: 14, color: scrolled ? 'var(--p-text)' : '#fff', opacity: .85, fontWeight: 500 }}>{label}</a>
             ))}
           </nav>
           <a
@@ -246,7 +247,7 @@ const TplModern = ({ t, projects, services, features, stats, testimonials, faqs,
       </header>
 
       {/* Hero — full bleed */}
-      <section style={{
+      <section id="hero" style={{
         minHeight: '100vh',
         background: 'linear-gradient(180deg, rgba(14,59,46,.55) 0%, rgba(14,59,46,.85) 100%), linear-gradient(135deg, oklch(.55 .07 142) 0%, oklch(.32 .06 142) 100%)',
         color: '#fff',
@@ -526,11 +527,11 @@ const TplModern = ({ t, projects, services, features, stats, testimonials, faqs,
           <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr', gap: 40, marginBottom: 40 }} className="ps-footer">
             <div>
               <div style={{ fontFamily: 'var(--p-fhead)', fontSize: 24, fontWeight: 600, color: '#fff', display: 'inline-flex', alignItems: 'center', gap: 8, marginBottom: 14 }}>
-                <span style={{ width: 28, height: 28, borderRadius: 4, background: 'var(--p-accent)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 14, fontWeight: 700 }}>ف</span>
-                الفارابي
+                <span style={{ width: 28, height: 28, borderRadius: 4, background: 'var(--p-accent)', display: 'inline-flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 14, fontWeight: 700 }}>{(t.name_ar || 'م').charAt(0)}</span>
+                {t.name_ar}
               </div>
               <p style={{ fontSize: 14, lineHeight: 1.7, maxWidth: 340 }}>
-                مكتب سعودي للاستشارات الهندسية والتصميم المعماري. نُؤمن أن المعمار يبدأ من الناس.
+                {t.about_ar?.slice(0, 160) || 'مكتب هندسي متخصص في التصميم المعماري والاستشارات الهندسية.'}
               </p>
               <div style={{ marginTop: 18, display: 'flex', gap: 8 }}>
                 {[
@@ -549,7 +550,7 @@ const TplModern = ({ t, projects, services, features, stats, testimonials, faqs,
             <FooterCol title="ساعات العمل" items={['الأحد - الخميس', '8:00 ص - 5:00 م', '', 'الجمعة - السبت', 'مغلق']} />
           </div>
           <div style={{ paddingTop: 24, borderTop: '1px solid rgba(255,255,255,.06)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 14, fontSize: 12 }}>
-            <div>© 2026 مكتب الفارابي. جميع الحقوق محفوظة.</div>
+            <div>© 2026 {t.name_ar}. جميع الحقوق محفوظة.</div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8, opacity: .5 }}>
               مدعوم بواسطة <Logo size={14} color="#fff" />
             </div>
