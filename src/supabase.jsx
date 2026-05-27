@@ -36,8 +36,12 @@ const sbSignOut = () => { sessionStorage.removeItem('wujood_admin'); return sb.a
 const sbGetSession = async () => { const { data: { session } } = await sb.auth.getSession(); return session; };
 const sbOnAuthChange = cb => sb.auth.onAuthStateChange(cb);
 const sbIsAdmin = async () => {
-  try { const { data } = await sb.rpc('is_admin'); return !!data; }
-  catch (e) { console.error('is_admin RPC failed:', e); return false; }
+  try {
+    const { data: { user } } = await sb.auth.getUser();
+    if (!user) return false;
+    const { data } = await sbAdm.from('admins').select('id').eq('id', user.id).maybeSingle();
+    return !!data;
+  } catch (e) { console.error('sbIsAdmin error:', e); return false; }
 };
 
 // ── Tenant ────────────────────────────────────────────────────
