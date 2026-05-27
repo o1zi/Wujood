@@ -1,30 +1,18 @@
 // Supabase client + data layer — Wujood Platform
 
 const ENV = window.__ENV__ || {};
-const SUPABASE_URL  = ENV.SUPABASE_URL  || '';
-const SUPABASE_ANON = ENV.SUPABASE_ANON || '';
-const SUPABASE_SVC  = ENV.SUPABASE_SVC  || SUPABASE_ANON;
+const SUPABASE_URL  = ENV.SUPABASE_URL  || 'https://sizvdycairulufrftcdb.supabase.co';
+const SUPABASE_ANON = ENV.SUPABASE_ANON || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpenZkeWNhaXJ1bHVmcmZ0Y2RiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4MjM3MTYsImV4cCI6MjA5NTM5OTcxNn0.ucP-dinX7k_zxwKJT9QkdjNK7YtiAtTSng0DPXpzHSU';
+const SUPABASE_SVC  = ENV.SUPABASE_SVC  || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNpenZkeWNhaXJ1bHVmcmZ0Y2RiIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3OTgyMzcxNiwiZXhwIjoyMDk1Mzk5NzE2fQ.uXXh_FYrjXN3OeJwe1EGPVnSqkl5wRPvKh10xmdLHaQ';
 
 const _createClient = window.supabase.createClient;
 
-if (!SUPABASE_URL || SUPABASE_URL.length < 10) {
-  console.error('🚫 متغيرات Supabase مفقودة. تأكد من إعداد SUPABASE_URL في Vercel.');
-  window.__ENV_MISSING__ = true;
-} else {
-  window.__ENV_MISSING__ = false;
-}
-
-// Main client — only create if env is set
-let sb = null;
-let sbAdm = null;
-if (!window.__ENV_MISSING__) {
-  sb = _createClient(SUPABASE_URL, SUPABASE_ANON, {
-    auth: { persistSession: true, storageKey: 'wujood_session' },
-  });
-  sbAdm = _createClient(SUPABASE_URL, SUPABASE_SVC, {
-    auth: { persistSession: false, autoRefreshToken: false },
-  });
-}
+let sb = _createClient(SUPABASE_URL, SUPABASE_ANON, {
+  auth: { persistSession: true, storageKey: 'wujood_session' },
+});
+let sbAdm = _createClient(SUPABASE_URL, SUPABASE_SVC, {
+  auth: { persistSession: false, autoRefreshToken: false },
+});
 
 // ── Field mappers (DB → app) ──────────────────────────────────
 const mapSvc  = s => ({ ...s, desc: s.description });
